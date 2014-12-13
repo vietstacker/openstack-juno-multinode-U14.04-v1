@@ -19,6 +19,7 @@ sleep 5
 sed -i 's/127.0.0.1/0.0.0.0/g' /etc/mysql/my.cnf
 #
 sed -i "/bind-address/a\default-storage-engine = innodb\n\
+innodb_file_per_table\n\
 collation-server = utf8_general_ci\n\
 init-connect = 'SET NAMES utf8'\n\
 character-set-server = utf8" /etc/mysql/my.cnf

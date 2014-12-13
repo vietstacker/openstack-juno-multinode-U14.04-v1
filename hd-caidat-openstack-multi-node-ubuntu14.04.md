@@ -93,12 +93,14 @@ apt-get update
 
 apt-get install git -y
 	
-git clone https://github.com/vietstacker/openstack-icehouse-multinode-ubuntu-v1.git
+git clone https://github.com/congto/openstack-juno-multinode-U14.04-v1.git
 	
-mv /root/openstack-icehouse-multinode-ubuntu-v1/script-ubuntu1204/ script-ubuntu1204
-	
-cd script-ubuntu1204
-	
+mv /root/openstack-juno-multinode-U14.04-v1/juno-ubuntu14.04/ juno-ubuntu14.04
+
+rm -rf openstack-juno-multinode-U14.04-v1
+
+cd juno-ubuntu14.04/
+
 chmod +x *.sh
 ```
 #### B.2. Sửa file khai báo các thông số trước khi thực thi shell

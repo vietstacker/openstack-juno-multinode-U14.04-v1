@@ -7,7 +7,7 @@
 source config.cfg
 
 echo "##### Cai dat keystone #####"
-apt-get install keystone -y
+apt-get -y install keystone python-keystoneclient 
 
 #/* Sao luu truoc khi sua file nova.conf
 filekeystone=/etc/keystone/keystone.conf
@@ -17,14 +17,14 @@ test -f $filekeystone.orig || cp $filekeystone $filekeystone.orig
 cat << EOF > $filekeystone
 [DEFAULT]
 admin_token = $TOKEN_PASS
-log_dir = /var/log/keystone
+verbose = True
 [assignment]
 [auth]
 [cache]
 [catalog]
 [credential]
 [database]
-connection = mysql://keystone:$ADMIN_PASS@controller/keystone
+connection = mysql://keystone:$DEFAULT_PASS@controller/keystone
 [ec2]
 [endpoint_filter]
 [federation]
@@ -42,9 +42,12 @@ connection = mysql://keystone:$ADMIN_PASS@controller/keystone
 [ssl]
 [stats]
 [token]
+provider = keystone.token.providers.uuid.Provider
+driver = keystone.token.persistence.backends.sql.Token
 [trust]
 [extra_headers]
 Distribution = Ubuntu
+
 EOF
 #
 echo "##### Xoa DB mac dinh #####"
