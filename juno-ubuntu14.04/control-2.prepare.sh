@@ -18,14 +18,9 @@ $NET_MGNT_IP     network
 EOF
 
 # Cai dat repos va update
-# Neu la ubuntu 12 chay 2 lenh duoi
-apt-get install -y python-software-properties &&  add-apt-repository cloud-archive:icehouse -y 
-apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade 
-
-# Neu la ubuntu 14.04 chay 3 lenh duoi
-# apt-get update -y
-# apt-get upgrade -y
-# apt-get dist-upgrade -y
+apt-get install ubuntu-cloud-keyring -y
+echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
+"trusty-updates/juno main" > /etc/apt/sources.list.d/cloudarchive-juno.list
 
 echo "Cai dat NTP va cau hinh NTP"
 sleep 3 
@@ -33,10 +28,25 @@ apt-get install ntp -y
 cp /etc/ntp.conf /etc/ntp.conf.bka
 rm /etc/ntp.conf
 cat /etc/ntp.conf.bka | grep -v ^# | grep -v ^$ >> /etc/ntp.conf
-#
-sed -i 's/server/#server/' /etc/ntp.conf
-echo "server controller" >> /etc/ntp.conf
 
+
+## Config NTP in JUNO
+sed -i 's/server ntp.ubuntu.com/ \
+server 0.vn.pool.ntp.org iburst \
+server 1.asia.pool.ntp.org iburst \
+server 2.asia.pool.ntp.org iburst/g' /etc/ntp.conf
+
+sed -i 's/restrict -4 default kod notrap nomodify nopeer noquery/ \
+#restrict -4 default kod notrap nomodify nopeer noquery/g' /etc/ntp.conf
+
+sed -i 's/restrict -6 default kod notrap nomodify nopeer noquery/ \
+restrict -4 default kod notrap nomodify \
+restrict -6 default kod notrap nomodify/g' /etc/ntp.conf
+
+# sed -i 's/server/#server/' /etc/ntp.conf
+# echo "server controller" >> /etc/ntp.conf
+
+##############################################
 echo "Cai dat RABBITMQ  va cau hinh RABBITMQ"
 sleep 3
 apt-get install rabbitmq-server -y
