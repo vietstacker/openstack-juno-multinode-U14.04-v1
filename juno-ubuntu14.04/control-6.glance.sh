@@ -3,7 +3,7 @@
 source config.cfg
 
 echo "########## CAI DAT GLANCE ##########"
-apt-get install glance python-glanceclient -y
+apt-get -y install glance python-glanceclient
 sleep 10
 echo "########## CAU HINH GLANCE API ##########"
 sleep 5 
@@ -17,20 +17,20 @@ touch $fileglanceapicontrol
 
 cat << EOF > $fileglanceapicontrol
 [DEFAULT]
-rpc_backend = rabbit
-rabbit_host = controller
-rabbit_password = $RABBIT_PASS
+verbose = True
 default_store = file
 bind_host = 0.0.0.0
 bind_port = 9292
 log_file = /var/log/glance/api.log
 backlog = 4096
-workers = 1
 registry_host = 0.0.0.0
 registry_port = 9191
 registry_client_protocol = http
+rabbit_host = localhost
+rabbit_port = 5672
 rabbit_use_ssl = false
 rabbit_userid = guest
+rabbit_password = guest
 rabbit_virtual_host = /
 rabbit_notification_exchange = glance
 rabbit_notification_topic = notifications
@@ -50,7 +50,32 @@ qpid_reconnect_interval = 0
 qpid_heartbeat = 5
 qpid_protocol = tcp
 qpid_tcp_nodelay = True
+delayed_delete = False
+scrub_time = 43200
+scrubber_datadir = /var/lib/glance/scrubber
+image_cache_dir = /var/lib/glance/image-cache/
+
+[database]
+connection = mysql://glance:$MYSQL_PASS@controller/glance
+backend = sqlalchemy
+
+[keystone_authtoken]
+auth_uri = http://controller:5000/v2.0
+identity_uri = http://controller:35357
+admin_tenant_name = service
+admin_user = glance
+admin_password = #ADMIN_PASS
+ 
+[paste_deploy]
+flavor = keystone
+
+[store_type_location_strategy]
+[profiler]
+[task]
+[glance_store]
+default_store = file
 filesystem_store_datadir = /var/lib/glance/images/
+
 swift_store_auth_version = 2
 swift_store_auth_address = 127.0.0.1:5000/v2.0/
 swift_store_user = jdoe:jdoe
@@ -68,24 +93,7 @@ s3_store_create_bucket_on_put = False
 sheepdog_store_address = localhost
 sheepdog_store_port = 7000
 sheepdog_store_chunk_size = 64
-delayed_delete = False
-scrub_time = 43200
-scrubber_datadir = /var/lib/glance/scrubber
-image_cache_dir = /var/lib/glance/image-cache/
-[database]
-connection = mysql://glance:$ADMIN_PASS@controller/glance
-backend = sqlalchemy
-[keystone_authtoken]
-auth_uri = http://controller:5000
-auth_host = controller
-auth_port = 35357
-auth_protocol = http
-admin_tenant_name = service
-admin_user = glance
-admin_password = $ADMIN_PASS
-[paste_deploy]
-flavor = keystone
-[store_type_location_strategy]
+
 EOF
 
 #
@@ -106,19 +114,45 @@ log_file = /var/log/glance/registry.log
 backlog = 4096
 api_limit_max = 1000
 limit_param_default = 25
+rabbit_host = localhost
+rabbit_port = 5672
+rabbit_use_ssl = false
+rabbit_userid = guest
+rabbit_password = guest
+rabbit_virtual_host = /
+rabbit_notification_exchange = glance
+rabbit_notification_topic = notifications
+rabbit_durable_queues = False
+qpid_notification_exchange = glance
+qpid_notification_topic = notifications
+qpid_hostname = localhost
+qpid_port = 5672
+qpid_username =
+qpid_password =
+qpid_sasl_mechanisms =
+qpid_reconnect_timeout = 0
+qpid_reconnect_limit = 0
+qpid_reconnect_interval_min = 0
+qpid_reconnect_interval_max = 0
+qpid_reconnect_interval = 0
+qpid_heartbeat = 5
+qpid_protocol = tcp
+qpid_tcp_nodelay = True
+
 [database]
-connection = mysql://glance:$ADMIN_PASS@controller/glance
+connection = mysql://glance:$MYSQL_PASS@controller/glance
 backend = sqlalchemy
+
 [keystone_authtoken]
-auth_uri = http://controller:5000
-auth_host = controller
-auth_port = 35357
-auth_protocol = http
+auth_uri = http://controller:5000/v2.0
+identity_uri = http://controller:35357
 admin_tenant_name = service
 admin_user = glance
-admin_password = $ADMIN_PASS
+admin_password = Welcome123
+
 [paste_deploy]
 flavor = keystone
+[profiler]
 EOF
 
 sleep 7
