@@ -10,7 +10,6 @@ sleep 5
 echo "########## Cài đặt Dashboard ##########"
 apt-get -y install openstack-dashboard memcached && dpkg --purge openstack-dashboard-ubuntu-theme
 
-
 echo "########## Cau hinh fix loi cho apache2 ##########"
 sleep 5
 # Fix loi apache cho ubuntu 14.04

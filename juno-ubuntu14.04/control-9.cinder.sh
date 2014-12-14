@@ -50,7 +50,7 @@ admin_user = cinder
 admin_password = $CINDER_PASS
 
 [database]
-connection = mysql://cinder:CINDER_DBPASS@$CON_MGNT_IP/cinder
+connection = mysql://cinder:$CINDER_DBPASS@$CON_MGNT_IP/cinder
 
 EOF
 
