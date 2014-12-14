@@ -1,41 +1,20 @@
 HDCD - OpenStack Icehouse - Multi node
 ===
-**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
-- [HDCD - OpenStack Icehouse - Multi node](#)
-		- [A. Thông tin LAB](#)
-			- [A.0. Chuẩn bị trên VMware Workstation](#)
-			- [A.1. Mô hình triển khai trong môi trường VMware Workstation](#)
-			- [A.2. Thiết lập cho từng node](#)
-				- [A.2.1. Cấu hình tối hiểu cho máy CONTROLLER](#)
-				- [A.2.2. Cấu hình tối thiểu cho NETWORK NODE](#)
-				- [A.2.3. Cấu hình tối thiểu cho COMPUTE NODE (COMPUTE1)](#)
-		- [B. Các bước thực hiện chung](#)
-			- [B.1. Thao tác trên tất cả các máy chủ](#)
-			- [B.2. Sửa file khai báo các thông số trước khi thực thi shell](#)
-		- [C. Thực hiện trên CONTROLLER NODE](#)
-			- [C.1. Thực thi script thiết lập IP, hostname ...](#)
-			- [C.2. Cài đặt các gói MYSQL, NTP cho Controller Node](#)
-			- [C.3. Tạo Database cho các thành phần](#)
-			- [C.4 Cài đặt và cấu hình keystone](#)
-			- [C.5. Tạo user, role, tenant, phân quyền cho user và tạo các endpoint](#)
-			- [C.6. Cài đặt thành phần GLANCE](#)
-			- [C.7 Cài đặt NOVA](#)
-			- [C.8 Cài đặt NEUTRON](#)
-			- [C.9 Cài đặt CINDER](#)
-		- [D. CÀI ĐẶT TRÊN NETWORK NODE](#)
-			- [D.1. Thiết lập IP, Hostname cho NETWORK NODE](#)
-			- [D.2. Thực thi việc cài đặt NEUTRON và cấu hình](#)
-		- [E. CÀI ĐẶT TRÊN COMPUTE NODE (COMPUTE1)](#)
-			- [E.1. Đặt hostname, IP và các gói bổ trợ](#)
-			- [E.2. Cài đặt các gói của NOVA cho COMPUTE NODE](#)
-		- [F. CÀI HORIZON, tạo các network trên CONTROLLER NODE](#)
-			- [F.1. Cài đặt Horizon](#)
-			- [F.2. Tạo PUBLIC NET, PRIVATE NET, ROUTER](#)
-			- [Khởi động lại các node](#)
-		- [KÊT THÚC](#)
-		
+Mục lục
+
+[A. Thông tin LAB](#thongtinlab)
+[A.0 Chuẩn bị trên VMware Workstation](#chuanbitrenvmware)
+[A.1. Mô hình triển khai trong môi trường VMware Workstation] (#mohinhtrienkhai)
+[A.2 Thiết lập cho từng node](#thietlapchotungnode)
+
+
+
+
+
+<a name="thongtinlab"></a>
 ### A. Thông tin LAB
+<a name="chuanbitrenvmware"></a>
 #### A.0. Chuẩn bị trên VMware Workstation
 <b> Cấu hình các vmnet trong vmware workdstation như hình dưới. (Đảm bảo các dải thiết lập đúng với từng vmnet)</b>
 - VMNET0 - Chế độ bridge (mặc định). Nhận cùng dải IP card mạng trong laptop, 192.168.1.0/24
@@ -44,11 +23,13 @@ HDCD - OpenStack Icehouse - Multi node
 Vào tab "Edit" ==> Virtual Network Editor.
 ![Alt text](http://i.imgur.com/qQkp9EE.png)
 
+<a name="mohinhtrienkhai"></a>
 #### A.1. Mô hình triển khai trong môi trường VMware Workstation
 Mô hình 3 node cài đặt OpenStack bên trong một máy LAPTOP
 
 ![Alt text](http://i.imgur.com/1htxCxz.png)
 
+<a name="thietlapchotungnode"></a>
 #### A.2. Thiết lập cho từng node
 
 - Khi cài đặt UBUNTU trong Vmware Workstation đảm bảo đúng thứ tự network
