@@ -1,9 +1,5 @@
 #!/bin/bash -ex
 #
-# RABBIT_PASS=a
-# ADMIN_PASS=a
-# METADATA_SECRET=hell0
-# NET_IP_DATA=10.10.20.72 
 
 source config.cfg
 
@@ -21,15 +17,6 @@ $NET_MGNT_IP     network
 127.0.1.1       network
 EOF
 
-# Cai dat repos va update
-apt-get install -y python-software-properties &&  add-apt-repository cloud-archive:icehouse -y 
-apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade 
-
-# apt-get update -y
-# apt-get upgrade -y
-# apt-get dist-upgrade -y
-
-
 #
 echo "############ Cau hinh forward goi tin cho cac VM ############"
 sleep 7 
@@ -40,7 +27,8 @@ sysctl -p
 
 echo "############ Cai cac goi cho network node ############ "
 sleep 7 
-apt-get install neutron-plugin-ml2 neutron-plugin-openvswitch-agent openvswitch-datapath-dkms neutron-l3-agent neutron-dhcp-agent -y
+apt-get -y install neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent
+
 #
 echo "############  CAU HINH CHO NETWORK NODE ############ "
 sleep 7 
@@ -55,36 +43,37 @@ touch $netneutron
 
 cat << EOF >> $netneutron
 [DEFAULT]
-auth_strategy = keystone
-rpc_backend = neutron.openstack.common.rpc.impl_kombu
-rabbit_host = controller
-rabbit_password = $RABBIT_PASS
+verbose = True
+lock_path = $state_path/lock
+
 core_plugin = ml2
 service_plugins = router
 allow_overlapping_ips = True
-verbose = True
-state_path = /var/lib/neutron
-lock_path = \$state_path/lock
-notification_driver = neutron.openstack.common.notifier.rpc_notifier
 
+rpc_backend = rabbit
+rabbit_host = $CON_MGNT_IP
+rabbit_password = $RABBIT_PASS
+
+auth_strategy = keystone
+
+[matchmaker_redis]
+[matchmaker_ring]
 [quotas]
-
 [agent]
 root_helper = sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
 
 [keystone_authtoken]
-auth_uri = http://controller:5000
-auth_host = controller
-auth_protocol = http
-auth_port = 35357
+auth_uri = http://$CON_MGNT_IP:5000/v2.0
+identity_uri = http://$CON_MGNT_IP:35357
 admin_tenant_name = service
 admin_user = neutron
-admin_password = $ADMIN_PASS
-signing_dir = \$state_path/keystone-signing
+admin_password = $NEUTRON_PASS
 
 [database]
-#connection = sqlite:////var/lib/neutron/neutron.sqlite
+# connection = sqlite:////var/lib/neutron/neutron.sqlite
 [service_providers]
+service_provider=LOADBALANCER:Haproxy:neutron.services.loadbalancer.drivers.haproxy.plugin_driver.HaproxyOnHostPluginDriver:default
+service_provider=VPN:openswan:neutron.services.vpn.service_drivers.ipsec.IPsecVPNDriver:default
 EOF
 #
 echo "############ Sua file cau hinh L3 AGENT ############"
@@ -97,9 +86,10 @@ rm $netl3agent
 touch $netl3agent
 cat << EOF >> $netl3agent
 [DEFAULT]
+verbose = True
 interface_driver = neutron.agent.linux.interface.OVSInterfaceDriver
 use_namespaces = True
-verbose = True
+external_network_bridge = br-ex
 EOF
 #
 echo "############  Sua file cau hinh DHCP AGENT ############ "
@@ -130,14 +120,17 @@ touch $netmetadata
 
 cat << EOF >> $netmetadata
 [DEFAULT]
-auth_url = http://controller:5000/v2.0
+verbose = True
+
+auth_url = http://$CON_MGNT_IP:5000/v2.0
 auth_region = regionOne
 admin_tenant_name = service
 admin_user = neutron
-admin_password = $ADMIN_PASS
-nova_metadata_ip = controller
+admin_password = $NEUTRON_PASS
+
+nova_metadata_ip = $CON_MGNT_IP
+
 metadata_proxy_shared_secret = $METADATA_SECRET
-verbose = True
 EOF
 #
 
@@ -152,27 +145,32 @@ touch $netml2
 
 cat << EOF >> $netml2
 [ml2]
-type_drivers = gre
+type_drivers = flat,gre
 tenant_network_types = gre
 mechanism_drivers = openvswitch
 
 [ml2_type_flat]
+flat_networks = external
 
 [ml2_type_vlan]
-
-[ml2_type_gre]
 tunnel_id_ranges = 1:1000
 
+[ml2_type_gre]
 [ml2_type_vxlan]
+[securitygroup]
+enable_security_group = True
+enable_ipset = True
+firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
 
 [ovs]
 local_ip = $NET_DATA_VM_IP
-tunnel_type = gre
 enable_tunneling = True
+bridge_mappings = external:br-ex
+ 
+[agent]
 
-[securitygroup]
-firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
-enable_security_group = True
+tunnel_types = gre
+
 
 EOF
 

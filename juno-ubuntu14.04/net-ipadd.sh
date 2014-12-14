@@ -24,8 +24,19 @@ cp /etc/ntp.conf /etc/ntp.conf.bka
 rm /etc/ntp.conf
 cat /etc/ntp.conf.bka | grep -v ^# | grep -v ^$ >> /etc/ntp.conf
 #
+sed -i 's/server 0.ubuntu.pool.ntp.org/ \
+#server 0.ubuntu.pool.ntp.org/g' /etc/ntp.conf
 
-sed -i 's/server ntp.ubuntu.com/server $CON_MGNT_IP iburst/g' /etc/ntp.conf
+sed -i 's/server 1.ubuntu.pool.ntp.org/ \
+#server 1.ubuntu.pool.ntp.org/g' /etc/ntp.conf
+
+sed -i 's/server 2.ubuntu.pool.ntp.org/ \
+#server 2.ubuntu.pool.ntp.org/g' /etc/ntp.conf
+
+sed -i 's/server 3.ubuntu.pool.ntp.org/ \
+#server 3.ubuntu.pool.ntp.org/g' /etc/ntp.conf
+
+sed -i "s/server ntp.ubuntu.com/server $CON_MGNT_IP iburst/g" /etc/ntp.conf
 
 
 echo "########## Cau hinh br-int va br-ex cho OpenvSwitch ##########"
