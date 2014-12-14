@@ -2,7 +2,7 @@
 #
 source config.cfg
 
-echo "########## CAI DAT NOVA TREN CONTROLLER ##########"
+echo "########## CAI DAT NOVA TREN $CON_MGNT_IP ##########"
 sleep 5 
 apt-get -y install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient
 
@@ -41,6 +41,20 @@ my_ip = $CON_MGNT_IP
 
 vncserver_listen = $CON_MGNT_IP
 vncserver_proxyclient_address = $CON_MGNT_IP
+
+network_api_class = nova.network.neutronv2.api.API
+security_group_api = neutron
+linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
+firewall_driver = nova.virt.firewall.NoopFirewallDriver
+
+[neutron]
+url = http://$CON_MGNT_IP:9696
+auth_strategy = keystone
+admin_auth_url = http://$CON_MGNT_IP:35357/v2.0
+admin_tenant_name = service
+admin_username = neutron
+admin_password = $NEUTRON_PASS
+
 
 [glance]
 host = $CON_MGNT_IP

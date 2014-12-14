@@ -3,10 +3,30 @@
 
 source config.cfg
 #Update cho Ubuntu
+apt-get -y install ubuntu-cloud-keyring
+echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
+"trusty-updates/juno main" > /etc/apt/sources.list.d/cloudarchive-juno.list
+
 apt-get update -y && apt-get upgrade -y && apt-get dist-upgrade -y
 
 echo "########## Cai dat va cau hinh OpenvSwitch ##########"
 apt-get install -y openvswitch-controller openvswitch-switch openvswitch-datapath-dkms
+
+echo "############ Cai dat NTP va cau hinh can thiet ############ "
+sleep 7 
+
+apt-get install ntp -y
+apt-get install python-mysqldb -y
+#
+echo "############ Sao luu cau hinh cua NTP ############ "
+sleep 7 
+cp /etc/ntp.conf /etc/ntp.conf.bka
+rm /etc/ntp.conf
+cat /etc/ntp.conf.bka | grep -v ^# | grep -v ^$ >> /etc/ntp.conf
+#
+
+sed -i 's/server ntp.ubuntu.com/server $CON_MGNT_IP iburst/g' /etc/ntp.conf
+
 
 echo "########## Cau hinh br-int va br-ex cho OpenvSwitch ##########"
 sleep 5

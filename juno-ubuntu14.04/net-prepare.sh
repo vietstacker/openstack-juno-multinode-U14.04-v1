@@ -29,20 +29,6 @@ apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade
 # apt-get upgrade -y
 # apt-get dist-upgrade -y
 
-echo "############ Cai dat NTP va cau hinh can thiet ############ "
-sleep 7 
-
-apt-get install ntp -y
-apt-get install python-mysqldb -y
-#
-echo "############ Sao luu cau hinh cua NTP ############ "
-sleep 7 
-cp /etc/ntp.conf /etc/ntp.conf.bka
-rm /etc/ntp.conf
-cat /etc/ntp.conf.bka | grep -v ^# | grep -v ^$ >> /etc/ntp.conf
-#
-sed -i 's/server/#server/' /etc/ntp.conf
-echo "server controller" >> /etc/ntp.conf
 
 #
 echo "############ Cau hinh forward goi tin cho cac VM ############"

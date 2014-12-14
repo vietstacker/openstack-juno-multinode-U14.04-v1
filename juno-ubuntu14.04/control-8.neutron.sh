@@ -45,20 +45,8 @@ nova_admin_username = nova
 nova_admin_tenant_id = $SERVICE_TENANT_ID
 nova_admin_password = $NOVA_PASS
 
-network_api_class = nova.network.neutronv2.api.API
-security_group_api = neutron
-linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
-firewall_driver = nova.virt.firewall.NoopFirewallDriver
-
 [matchmaker_redis]
 [matchmaker_ring]
-[neutron]
-url = http://$CON_MGNT_IP:9696
-auth_strategy = keystone
-admin_auth_url = http://$CON_MGNT_IP:35357/v2.0
-admin_tenant_name = service
-admin_username = neutron
-admin_password = $NEUTRON_PASS
 
 [quotas]
 [agent]
