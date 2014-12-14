@@ -54,15 +54,14 @@ admin_auth_url = http://$CON_MGNT_IP:35357/v2.0
 admin_tenant_name = service
 admin_username = neutron
 admin_password = $NEUTRON_PASS
+service_metadata_proxy = True
+metadata_proxy_shared_secret = $METADATA_SECRET
 
 
 [glance]
 host = $CON_MGNT_IP
 
-neutron]
-...
-service_metadata_proxy = True
-metadata_proxy_shared_secret = $METADATA_SECRET
+
 
 [database]
 connection = mysql://nova:$NOVA_DBPASS@$CON_MGNT_IP/nova

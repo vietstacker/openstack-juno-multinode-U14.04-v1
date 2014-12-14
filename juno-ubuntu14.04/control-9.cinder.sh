@@ -54,6 +54,8 @@ connection = mysql://cinder:$CINDER_DBPASS@$CON_MGNT_IP/cinder
 
 EOF
 
+sed  -r -e 's#(filter = )(\[ "a/\.\*/" \])#\1[ "a\/sda1\/", "a\/sdb\/", "r/\.\*\/"]#g' /etc/lvm/lvm.conf
+
 # Phan quyen cho file cinder
 chown cinder:cinder $filecinder
 
