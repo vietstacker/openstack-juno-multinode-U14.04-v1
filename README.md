@@ -1,4 +1,4 @@
-### Script OpenStack Icehouse MULTI NODE
+### Script cài đặt OpenStack Juno trên nhiều máy chủ 
 
 #### 1. Nhóm thực hiện:
 
@@ -20,8 +20,9 @@
 - Máy chủ sử dụng CPU Intel có hỗ trợ ảo hóa
 - Các thiết lập về IP cần đàm bảo theo hướng dẫn
 - Triển khai trên Ubuntu 14.04
+- Các project triển khai: KEYSTONE, NOVA, NEUTRON, GLANCE, CINDER, HORIZON
 
-#### [4. Link hướng dẫn cài đặt OpenStack Juno trên nhiều máy chủ](https://github.com/vietstacker/openstack-icehouse-multinode-ubuntu-v1/blob/master/hd-caidat-openstack-multi-node-u1204.md)
+#### [4. Link hướng dẫn cài đặt OpenStack Juno trên nhiều máy chủ](https://github.com/vietstacker/openstack-juno-multinode-U14.04-v1/blob/master/hd-caidat-openstack-multi-node-ubuntu14.04.md)
 
 #### [5. Đang quay video hướng dẫn thực thi script & hướng dẫn sử dụng dashborad]
 
