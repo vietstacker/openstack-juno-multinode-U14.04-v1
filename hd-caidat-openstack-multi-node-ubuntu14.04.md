@@ -1,7 +1,6 @@
-HDCD - OpenStack Icehouse - Multi node
+Hướng dẫn chạy script cài đặt OpenStack Juno trên nhiều máy chủ
 ===
-
-Mục lục
+# Mục lục
 
 [A. Thông tin LAB](#thongtinlab)
 
