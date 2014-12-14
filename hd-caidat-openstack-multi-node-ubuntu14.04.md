@@ -1,27 +1,17 @@
 HDCD - OpenStack Icehouse - Multi node
 ===
-**MỤC LỤC**  *được tạo bởi [DocToc](http://doctoc.herokuapp.com/)*
+**Table of Contents**  *generated with [DocToc](http://doctoc.herokuapp.com/)*
 
 - [HDCD - OpenStack Icehouse - Multi node](#)
-
 		- [A. Thông tin LAB](#)
-		
 			- [A.0. Chuẩn bị trên VMware Workstation](#)
-			
 			- [A.1. Mô hình triển khai trong môi trường VMware Workstation](#)
-			
 			- [A.2. Thiết lập cho từng node](#)
-			
 				- [A.2.1. Cấu hình tối hiểu cho máy CONTROLLER](#)
-				
 				- [A.2.2. Cấu hình tối thiểu cho NETWORK NODE](#)
-				
 				- [A.2.3. Cấu hình tối thiểu cho COMPUTE NODE (COMPUTE1)](#)
-				
 		- [B. Các bước thực hiện chung](#)
-		
 			- [B.1. Thao tác trên tất cả các máy chủ](#)
-			
 			- [B.2. Sửa file khai báo các thông số trước khi thực thi shell](#)
 		- [C. Thực hiện trên CONTROLLER NODE](#)
 			- [C.1. Thực thi script thiết lập IP, hostname ...](#)
@@ -42,11 +32,9 @@ HDCD - OpenStack Icehouse - Multi node
 		- [F. CÀI HORIZON, tạo các network trên CONTROLLER NODE](#)
 			- [F.1. Cài đặt Horizon](#)
 			- [F.2. Tạo PUBLIC NET, PRIVATE NET, ROUTER](#)
-			
 			- [Khởi động lại các node](#)
-			
 		- [KÊT THÚC](#)
-
+		
 ### A. Thông tin LAB
 #### A.0. Chuẩn bị trên VMware Workstation
 <b> Cấu hình các vmnet trong vmware workdstation như hình dưới. (Đảm bảo các dải thiết lập đúng với từng vmnet)</b>
