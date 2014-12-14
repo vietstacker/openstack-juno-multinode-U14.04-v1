@@ -44,7 +44,7 @@ touch $netneutron
 cat << EOF >> $netneutron
 [DEFAULT]
 verbose = True
-lock_path = $state_path/lock
+lock_path = \$state_path/lock
 
 core_plugin = ml2
 service_plugins = router
