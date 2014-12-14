@@ -53,59 +53,56 @@ test -f $filenova.orig || cp $filenova $filenova.orig
 #Chen noi dung file /etc/nova/nova.conf vao 
 cat << EOF > $filenova
 [DEFAULT]
-network_api_class = nova.network.neutronv2.api.API
-neutron_url = http://controller:9696
-neutron_auth_strategy = keystone
-neutron_admin_tenant_name = service
-neutron_admin_username = neutron
-neutron_admin_password = $ADMIN_PASS
-neutron_admin_auth_url = http://controller:35357/v2.0
-linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
-firewall_driver = nova.virt.firewall.NoopFirewallDriver
-security_group_api = neutron
+verbose = True
+
 dhcpbridge_flagfile=/etc/nova/nova.conf
 dhcpbridge=/usr/bin/nova-dhcpbridge
 logdir=/var/log/nova
 state_path=/var/lib/nova
 lock_path=/var/lock/nova
 force_dhcp_release=True
-iscsi_helper=tgtadm
 libvirt_use_virtio_for_bridges=True
-connection_type=libvirt
-root_helper=sudo nova-rootwrap /etc/nova/rootwrap.conf
 verbose=True
 ec2_private_dns_show_ip=True
 api_paste_config=/etc/nova/api-paste.ini
-volumes_path=/var/lib/nova/volumes
 enabled_apis=ec2,osapi_compute,metadata
-auth_strategy = keystone
+
 rpc_backend = rabbit
-rabbit_host = controller
+rabbit_host = $CON_MGNT_IP
 rabbit_password = $RABBIT_PASS
 
-# Chen password cho VM
-libvirt_inject_password = True
-libvirt_inject_partition = -1
-enable_instance_password = True
+auth_strategy = keystone
 
 my_ip = $COM1_MGNT_IP
+
 vnc_enabled = True
 vncserver_listen = 0.0.0.0
 vncserver_proxyclient_address = $COM1_MGNT_IP
-novncproxy_base_url = http://$CON_EXT_IP:6080/vnc_auto.html
-glance_host = controller
+novncproxy_base_url = http://$CON_MGNT_IP:6080/vnc_auto.html
 
-[database]
-connection = mysql://nova:$ADMIN_PASS@controller/nova
+network_api_class = nova.network.neutronv2.api.API
+security_group_api = neutron
+linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
+firewall_driver = nova.virt.firewall.NoopFirewallDriver
+
+
+[glance]
+host = $CON_MGNT_IP
+
+[neutron]
+url = http://$CON_MGNT_IP:9696
+auth_strategy = keystone
+admin_auth_url = http://$CON_MGNT_IP:35357/v2.0
+admin_tenant_name = service
+admin_username = neutron
+admin_password = $NEUTRON_PASS
 
 [keystone_authtoken]
-auth_uri = http://controller:5000
-auth_host = controller
-auth_port = 35357
-auth_protocol = http
+auth_uri = http://$CON_MGNT_IP:5000/v2.0
+identity_uri = http://$CON_MGNT_IP:35357
 admin_tenant_name = service
 admin_user = nova
-admin_password = $ADMIN_PASS
+admin_password = $NOVA_PASS
 EOF
 
 # Xoa file sql mac dinh
@@ -137,37 +134,38 @@ rm $comfileneutron
  
 cat << EOF > $comfileneutron
 [DEFAULT]
-auth_strategy = keystone
-rpc_backend = neutron.openstack.common.rpc.impl_kombu
-rabbit_host = controller
-rabbit_password = $RABBIT_PASS
+verbose = True
+lock_path = \$state_path/lock
+
 core_plugin = ml2
 service_plugins = router
 allow_overlapping_ips = True
-verbose = True
-state_path = /var/lib/neutron
-lock_path = \$state_path/lock
-notification_driver = neutron.openstack.common.notifier.rpc_notifier
 
+rpc_backend = rabbit
+rabbit_host = $CON_MGNT_IP
+rabbit_password = $RABBIT_PASS
+
+auth_strategy = keystone
+
+
+[matchmaker_redis]
+[matchmaker_ring]
 [quotas]
-
 [agent]
 root_helper = sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
 
 [keystone_authtoken]
-auth_uri = http://controller:5000
-auth_host = controller
-auth_protocol = http
-auth_port = 35357
+auth_uri = http://$CON_MGNT_IP:5000/v2.0
+identity_uri = http://$CON_MGNT_IP:35357
 admin_tenant_name = service
 admin_user = neutron
-admin_password = $ADMIN_PASS
-signing_dir = \$state_path/keystone-signing
+admin_password = $NEUTRON_PASS
 
 [database]
-# connection = sqlite:////var/lib/neutron/neutron.sqlite
-
+connection = sqlite:////var/lib/neutron/neutron.sqlite
 [service_providers]
+service_provider=LOADBALANCER:Haproxy:neutron.services.loadbalancer.drivers.haproxy.plugin_driver.HaproxyOnHostPluginDriver:default
+service_provider=VPN:openswan:neutron.services.vpn.service_drivers.ipsec.IPsecVPNDriver:default
 EOF
 #
 
@@ -182,27 +180,27 @@ touch $comfileml2
 #Chen noi dung file  vao /etc/neutron/plugins/ml2/ml2_conf.ini
 cat << EOF > $comfileml2
 [ml2]
-type_drivers = gre
+type_drivers = flat,gre
 tenant_network_types = gre
 mechanism_drivers = openvswitch
 
 [ml2_type_flat]
-
 [ml2_type_vlan]
-
 [ml2_type_gre]
 tunnel_id_ranges = 1:1000
 
 [ml2_type_vxlan]
+[securitygroup]
+enable_security_group = True
+enable_ipset = True
+firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
 
 [ovs]
 local_ip = $COM1_DATA_VM_IP
-tunnel_type = gre
 enable_tunneling = True
 
-[securitygroup]
-firewall_driver = neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver
-enable_security_group = True
+[agent]
+tunnel_types = gre
 
 EOF
 
@@ -219,7 +217,7 @@ echo "############ Tao integration bridge ############"
 sleep 5
 ########
 # Tao integration bridge
-ovs-vsctl add-br br-int
+# ovs-vsctl add-br br-int
 
 
 # fix loi libvirtError: internal error: no supported architecture for os type 'hvm'
