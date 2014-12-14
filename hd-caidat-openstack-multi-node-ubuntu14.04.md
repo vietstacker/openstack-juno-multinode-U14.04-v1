@@ -11,6 +11,17 @@ Mục lục
 
 [A.2 Thiết lập cho từng node](#thietlapchotungnode)
 
+[B. Các bước thực hiện chung](#B)
+
+[C. Thực hiện trên CONTROLLER NODE](#C)
+
+[D. CÀI ĐẶT TRÊN NETWORK NODE](#D)
+
+[ E. CÀI ĐẶT TRÊN COMPUTE NODE](#E)
+
+[F. CÀI HORIZON, tạo các network trên CONTROLLER NODE](#F)
+
+[KÊT THÚC](#ketthuc)
 
 
 <a name="thongtinlab"></a>
@@ -67,6 +78,7 @@ Minh họa bằng hình:
 
 ![Alt text](http://i.imgur.com/zuNIVIE.png)
 
+<a name="B"></a>
 ### B. Các bước thực hiện chung
 
 #### B.1. Thao tác trên tất cả các máy chủ
@@ -119,6 +131,7 @@ File gốc như sau: (tốt nhất đặt giống file gốc)
 
 Sau khi thay đổi xong chuyển qua thực thi các file dưới trên từng node
 
+<a name="C"></a>
 ### C. Thực hiện trên CONTROLLER NODE
 #### C.1. Thực thi script thiết lập IP, hostname ...
 ```sh
@@ -236,6 +249,7 @@ bash control-9.cinder.sh
 
 Tạm dừng việc cài đặt trên CONTROLLER NODE, sau khi cài xong NETWORK NODE và COMPUTE1 NODE sẽ quay lại để cài HORIZON và tạo các network, router.
 
+<a name="D"></a>
 ### D. CÀI ĐẶT TRÊN NETWORK NODE
 - Cài đặt NEUTRON, ML2 và cấu hình GRE, sử dụng use case per-router per-tenant.
 - Lưu ý: Cần thực hiện bước tải script từ github về như hướng dẫn ở bước B.1 và B.2 (nếu có thay đổi IP)
@@ -296,6 +310,7 @@ bash net-prepare.sh
 ```
 Kết thúc cài đặt trên NETWORK NODE và chuyển sang cài đặt COMPUTE NODE
 
+<a name="E"></a>
 ### E. CÀI ĐẶT TRÊN COMPUTE NODE (COMPUTE1)
 Lưu ý: Cần thực hiện bước tải script từ github về như hướng dẫn ở bước B.1 và B.2 (nếu có thay đổi IP)
 Thực hiện các shell dưới để thiết lập hostname, gán ip và cài đặt các thành phần của nove trên máy COMPUTE NODE
@@ -359,16 +374,17 @@ Chọn YES ở màn hình trên trong quá trình cài đặt
 
 Kết thúc bước cài đặt trên COMPUTE NODE, chuyển về CONTROLLER NODE.
 
-
-
+<a name="F"></a>
 ### F. CÀI HORIZON, tạo các network trên CONTROLLER NODE
 
 #### F.1. Cài đặt Horizon
 Đăng nhập bằng tài khoản root và đứng tại thư mục /root/juno-ubuntu14.04
 
+```sh
     cd /root/juno-ubuntu14.04
 	
     bash control-horizon.sh
+```
 
 Sau khi thực hiện xong việc cài đặt HORIZON, màn hình sẽ trả về IP ADD, User và Password để đăng nhập vào horizon    
     
@@ -378,7 +394,9 @@ Thực hiện script dưới để tạo các loại network cho OpenStack
 Tạo router, gán subnet cho router, gán gateway cho router
 Khởi tạo một máy ảo với image là cirros để test
 
+```sh
     bash creat-network.sh
+``` 
 
 #### Khởi động lại các node
 Khởi động lần lượt các node
@@ -387,6 +405,7 @@ Khởi động lần lượt các node
 - COMPUTE NODE 
 Và đăng nhập vào HORIZON ở bước F.1 và sử dụng OpenStack
 
+<a name="ketthuc"></a>
 ### KÊT THÚC
  CHÚC VUI !
 
