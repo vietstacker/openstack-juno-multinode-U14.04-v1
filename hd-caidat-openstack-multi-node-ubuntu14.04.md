@@ -4,11 +4,12 @@ HDCD - OpenStack Icehouse - Multi node
 Mục lục
 
 [A. Thông tin LAB](#thongtinlab)
+
 [A.0 Chuẩn bị trên VMware Workstation](#chuanbitrenvmware)
+
 [A.1. Mô hình triển khai trong môi trường VMware Workstation] (#mohinhtrienkhai)
+
 [A.2 Thiết lập cho từng node](#thietlapchotungnode)
-
-
 
 
 
