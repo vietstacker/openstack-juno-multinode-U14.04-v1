@@ -56,15 +56,15 @@ scrubber_datadir = /var/lib/glance/scrubber
 image_cache_dir = /var/lib/glance/image-cache/
 
 [database]
-connection = mysql://glance:$MYSQL_PASS@controller/glance
+connection = mysql://glance:$GLANCE_DBPASS@$CON_MGNT_IP/glance
 backend = sqlalchemy
 
 [keystone_authtoken]
-auth_uri = http://controller:5000/v2.0
-identity_uri = http://controller:35357
+auth_uri = http://$CON_MGNT_IP:5000/v2.0
+identity_uri = http://$CON_MGNT_IP:35357
 admin_tenant_name = service
 admin_user = glance
-admin_password = #ADMIN_PASS
+admin_password = $GLANCE_PASS
  
 [paste_deploy]
 flavor = keystone
@@ -140,15 +140,15 @@ qpid_protocol = tcp
 qpid_tcp_nodelay = True
 
 [database]
-connection = mysql://glance:$MYSQL_PASS@controller/glance
+connection = mysql://glance:$GLANCE_DBPASS@$CON_MGNT_IP/glance
 backend = sqlalchemy
 
 [keystone_authtoken]
-auth_uri = http://controller:5000/v2.0
-identity_uri = http://controller:35357
+auth_uri = http://$CON_MGNT_IP:5000/v2.0
+identity_uri = http://$CON_MGNT_IP:35357
 admin_tenant_name = service
 admin_user = glance
-admin_password = Welcome123
+admin_password = $GLANCE_PASS
 
 [paste_deploy]
 flavor = keystone
@@ -163,23 +163,24 @@ sleep 7
 echo "########## DONG BO DATABASE CHO GLANCE ##########"
 glance-manage db_sync
 
-sleep 7
+sleep 5
 echo "########## KHOI DONG LAI GLANCE ##########"
 service glance-registry restart
 service glance-api restart
+sleep 3
 service glance-registry restart
 service glance-api restart
 
 #
-sleep 7
+sleep 3
 echo "########## ADD THEM IMAGE CHO GLANCE ##########"
 mkdir images
 cd images/
-wget http://cdn.download.cirros-cloud.net/0.3.2/cirros-0.3.2-x86_64-disk.img
-glance image-create --name "cirros-0.3.2-x86_64" --disk-format qcow2 \
---container-format bare --is-public True --progress < cirros-0.3.2-x86_64-disk.img
+wget http://cdn.download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img
+glance image-create --name "cirros-0.3.3-x86_64" --disk-format qcow2 \
+--container-format bare --is-public True --progress < cirros-0.3.3-x86_64-disk.img
 cd /root/
 
-sleep 7
+sleep 5
 echo "########## Kiem tra lai image vua them vao GLANCE ##########"
 glance image-list
