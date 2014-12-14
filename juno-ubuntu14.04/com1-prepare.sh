@@ -12,8 +12,7 @@ cat << EOF >> $iphost
 127.0.0.1       localhost
 $CON_MGNT_IP    controller
 $COM1_MGNT_IP      compute1
-127.0.0.1        compute1
-$COM2_MGNT_IP      compute2
+# 127.0.0.1        compute1
 $NET_MGNT_IP     network
 EOF
 
@@ -111,7 +110,7 @@ rm /var/lib/nova/nova.sqlite
 
 # fix loi libvirtError: internal error: no supported architecture for os type 'hvm'
 echo 'kvm_intel' >> /etc/modules
- 
+
 # Khoi dong lai nova
 service nova-compute restart
 service nova-compute restart
