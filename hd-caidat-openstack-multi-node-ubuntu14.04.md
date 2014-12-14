@@ -93,7 +93,7 @@ apt-get update
 
 apt-get install git -y
 	
-git clone https://github.com/congto/openstack-juno-multinode-U14.04-v1.git
+git clone https://github.com/vietstacker/openstack-juno-multinode-U14.04-v1.git
 	
 mv /root/openstack-juno-multinode-U14.04-v1/juno-ubuntu14.04/ juno-ubuntu14.04
 
@@ -230,15 +230,17 @@ Chuyển qua cài các dịch vụ tiếp theo
 #### C.6. Cài đặt thành phần GLANCE
 GLANCE dùng để cung cấp image template để khởi tạo máy ảo
 
-    bash control-6.glance.sh
-
+```sh
+bash control-6.glance.sh
+```
+	
 - Shell thực hiện việc cài đặt GLANCE và tạo image với hệ điều hành Cirros (Bản Ubuntu thu gọn) dùng để kiểm tra GLANCE và tạo máy ảo sau này.
     
 #### C.7 Cài đặt NOVA
+```sh
+bash control-7.nova.sh
+```
 
-
-    bash control-7.nova.sh
-    
 #### C.8 Cài đặt NEUTRON
 ```sh
 bash control-8.neutron.sh
