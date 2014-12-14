@@ -3,15 +3,6 @@
 
 source config.cfg
 
-# Cau hinh cho file /etc/hosts
-# COM1_IP_MGNT=10.10.10.73
-# COM1_IP_DATA=10.10.20.73
-# COM2_IP_MGNT=10.10.10.74
-# COM2_IP_DATA=10.10.20.74
-# CON_IP_EX=192.168.1.71
-# CON_IP_MGNT=10.10.10.71
-# ADMIN_PASS=a
-# RABBIT_PASS=a
 #
 iphost=/etc/hosts
 test -f $iphost.orig || cp $iphost $iphost.orig
@@ -28,34 +19,9 @@ EOF
 
 # Cai dat repos va update
 
-apt-get install -y python-software-properties &&  add-apt-repository cloud-archive:icehouse -y 
-apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade 
-
-# apt-get update -y
-# apt-get upgrade -y
-# apt-get dist-upgrade -y
-
-########
-echo "############ Cai dat NTP ############"
-########
-#Cai dat NTP va cau hinh can thiet 
-apt-get install ntp -y
-apt-get install python-mysqldb -y
-
-# Cai cac goi can thiet cho compute 
-apt-get install nova-compute-kvm python-guestfs -y
-
-########
-echo "############ Cau hinh NTP ############"
-sleep 10
-########
-# Cau hinh ntp
-cp /etc/ntp.conf /etc/ntp.conf.bka
-rm /etc/ntp.conf
-cat /etc/ntp.conf.bka | grep -v ^# | grep -v ^$ >> /etc/ntp.conf
-#
-sed -i 's/server/#server/' /etc/ntp.conf
-echo "server controller" >> /etc/ntp.conf
+apt-get -y update
+apt-get -y install nova-compute sysfsutils
+# apt-get -y install nova-compute-kvm python-guestfs 
 
 echo "net.ipv4.conf.all.rp_filter=0" >> /etc/sysctl.conf
 echo "net.ipv4.conf.default.rp_filter=0" >> /etc/sysctl.conf
