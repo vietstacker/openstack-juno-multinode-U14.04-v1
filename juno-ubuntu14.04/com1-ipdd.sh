@@ -72,7 +72,6 @@ netmask $NETMASK_ADD
 
 EOF
 
-
 sleep 5
 echo "##### KHOI DONG LAI MAY #####"
 init 6
