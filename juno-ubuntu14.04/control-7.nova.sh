@@ -45,6 +45,11 @@ vncserver_proxyclient_address = $CON_MGNT_IP
 [glance]
 host = $CON_MGNT_IP
 
+neutron]
+...
+service_metadata_proxy = True
+metadata_proxy_shared_secret = $METADATA_SECRET
+
 [database]
 connection = mysql://nova:$NOVA_DBPASS@$CON_MGNT_IP/nova
 
