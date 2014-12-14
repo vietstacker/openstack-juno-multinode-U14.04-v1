@@ -25,4 +25,4 @@
 
 #### [5. Đang quay video hướng dẫn thực thi script & hướng dẫn sử dụng dashborad]
 
-# [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/6lJwvGY1WLk/0.jpg)](http://www.youtube.com/watch?v=6lJwvGY1WLk)
+<!--- [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/6lJwvGY1WLk/0.jpg)](http://www.youtube.com/watch?v=6lJwvGY1WLk) -->
