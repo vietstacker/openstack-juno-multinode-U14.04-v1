@@ -16,21 +16,28 @@ test -f $filekeystone.orig || cp $filekeystone $filekeystone.orig
 #Chen noi dung file /etc/keystone/keystone.conf
 cat << EOF > $filekeystone
 [DEFAULT]
-admin_token = $TOKEN_PASS
 verbose = True
+log_dir=/var/log/keystone
+admin_token = $TOKEN_PASS
+
 [assignment]
 [auth]
 [cache]
 [catalog]
 [credential]
+
 [database]
-connection = mysql://keystone:$DEFAULT_PASS@controller/keystone
+connection = mysql://keystone:$MYSQL_PASS@controller/keystone
+
 [ec2]
 [endpoint_filter]
+[endpoint_policy]
 [federation]
 [identity]
+[identity_mapping]
 [kvs]
 [ldap]
+[matchmaker_redis]
 [matchmaker_ring]
 [memcache]
 [oauth1]
@@ -38,17 +45,20 @@ connection = mysql://keystone:$DEFAULT_PASS@controller/keystone
 [paste_deploy]
 [policy]
 [revoke]
+[saml]
 [signing]
 [ssl]
 [stats]
 [token]
 provider = keystone.token.providers.uuid.Provider
 driver = keystone.token.persistence.backends.sql.Token
+
 [trust]
 [extra_headers]
 Distribution = Ubuntu
 
 EOF
+
 #
 echo "##### Xoa DB mac dinh #####"
 rm  /var/lib/keystone/keystone.db

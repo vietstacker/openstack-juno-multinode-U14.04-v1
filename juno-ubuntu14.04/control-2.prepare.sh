@@ -22,6 +22,10 @@ apt-get install ubuntu-cloud-keyring -y
 echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
 "trusty-updates/juno main" > /etc/apt/sources.list.d/cloudarchive-juno.list
 
+sleep 5
+echo "UPDATE PACKAGE FOR JUNO"
+apt-get update && apt-get dist-upgrade
+
 echo "Cai dat NTP va cau hinh NTP"
 sleep 3 
 apt-get install ntp -y
