@@ -24,7 +24,7 @@ echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
 
 sleep 5
 echo "UPDATE PACKAGE FOR JUNO"
-apt-get update && apt-get dist-upgrade
+apt-get -y update && apt-get -y dist-upgrade
 
 echo "Cai dat NTP va cau hinh NTP"
 sleep 3 

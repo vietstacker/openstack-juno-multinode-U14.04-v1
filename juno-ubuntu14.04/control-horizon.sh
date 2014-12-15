@@ -13,14 +13,12 @@ apt-get -y install openstack-dashboard memcached && dpkg --purge openstack-dashb
 echo "########## Cau hinh fix loi cho apache2 ##########"
 sleep 5
 # Fix loi apache cho ubuntu 14.04
-# echo "ServerName localhost" > /etc/apache2/conf-available/servername.conf
-# sudo a2enconf servername 
-echo "ServerName localhost" >> /etc/apache2/httpd.conf
-
+echo "ServerName localhost" > /etc/apache2/conf-available/servername.conf
+sudo a2enconf servername 
 
 echo "########## Tao trang redirect ##########"
 
-filehtml=/var/www/index.html
+filehtml=/var/www/html/index.html
 test -f $filehtml.orig || cp $filehtml $filehtml.orig
 rm $filehtml
 touch $filehtml
@@ -34,7 +32,6 @@ cat << EOF >> $filehtml
 </body>
 </html>
 EOF
-
 # Cho phep chen password tren dashboad ( chi ap dung voi image tu dong )
 sed -i "s/'can_set_password': False/'can_set_password': True/g" /etc/openstack-dashboard/local_settings.py
 
