@@ -183,6 +183,18 @@ service neutron-l3-agent restart
 service neutron-dhcp-agent restart
 service neutron-metadata-agent restart
 
+# Khai bao khoi dong cung may chu
+sed -i "s/exit 0/# exit 0/g" /etc/rc.local
+echo "service openvswitch-switch restart" >> /etc/rc.local
+echo "service neutron-plugin-openvswitch-agent restart" >> /etc/rc.local
+echo "service neutron-l3-agent restart" >> /etc/rc.local
+echo "service neutron-dhcp-agent restart" >> /etc/rc.local
+echo "service neutron-metadata-agent restart" >> /etc/rc.local
+echo "service neutron-lbaas-agent restart" >> /etc/rc.local
+#echo "service neutron-vpn-agent restart" >> /etc/rc.local
+echo "exit 0" >> /etc/rc.local
+
+
 echo "########## TAO FILE CHO BIEN MOI TRUONG ##########"
 sleep 5
 echo "export OS_USERNAME=admin" > admin-openrc.sh
