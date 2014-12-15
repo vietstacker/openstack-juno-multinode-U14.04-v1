@@ -5,7 +5,7 @@
 | Họ và Tên        | Nick Skype  | Email | 
 |------------------|------------ |-------|
 |Lương Hữu Tuấn    | tuantuluong | tuantuluong@gmail.com 		|
-|Lê Quan Hiếu      | hieulq98    | hieulq19@gmail.com 			|
+|Lê Quang Hiếu      | hieulq89    | hieulq19@gmail.com 			|
 |Hoàng Đình Quân   | hdquan2014  | d0m0reg00dthing@gmail.com 	|
 |VietStacker       | vietstack   | vietstack@gmail.com 			|
 
