@@ -253,6 +253,23 @@ Tạm dừng việc cài đặt trên CONTROLLER NODE, sau khi cài xong NETWORK
 - Cài đặt NEUTRON, ML2 và cấu hình GRE, sử dụng use case per-router per-tenant.
 - Lưu ý: Cần thực hiện bước tải script từ github về như hướng dẫn ở bước B.1 và B.2 (nếu có thay đổi IP)
 
+Truy cập bằng tài khoản root vào máy các máy chủ và tải các gói, script chuẩn bị cho quá trình cài đặt
+```sh
+apt-get update
+
+apt-get install git -y
+	
+git clone https://github.com/vietstacker/openstack-juno-multinode-U14.04-v1.git
+	
+mv /root/openstack-juno-multinode-U14.04-v1/juno-ubuntu14.04/ juno-ubuntu14.04
+
+rm -rf openstack-juno-multinode-U14.04-v1
+
+cd juno-ubuntu14.04/
+
+chmod +x *.sh
+```
+
 #### D.1. Thiết lập IP, Hostname cho NETWORK NODE
 Script thực hiện việc cài đặt OpenvSwitch và khai báo br-int & br-ex cho OpenvSwitch
 
@@ -361,11 +378,28 @@ Sau khi thực hiện xong shell trên các NICs của COMPUTE NODE sẽ như sa
 COMPUTE node sẽ khởi động lại, cần phải đăng nhập bằng tải khoản root để thực hiện shell dưới
     
 #### E.2. Cài đặt các gói của NOVA cho COMPUTE NODE
+Truy cập bằng tài khoản root vào máy các máy chủ và tải các gói, script chuẩn bị cho quá trình cài đặt
+```sh
+apt-get update
+
+apt-get install git -y
+	
+git clone https://github.com/vietstacker/openstack-juno-multinode-U14.04-v1.git
+	
+mv /root/openstack-juno-multinode-U14.04-v1/juno-ubuntu14.04/ juno-ubuntu14.04
+
+rm -rf openstack-juno-multinode-U14.04-v1
+
+cd juno-ubuntu14.04/
+
+chmod +x *.sh
+```
 Đăng nhập bằng tài khoản root và thực thi các lệnh dưới để tiến hành cài đặt nova
 
-    cd juno-ubuntu14.04
-	
-    bash com1-prepare.sh
+```sh
+cd juno-ubuntu14.04
+bash com1-prepare.sh
+```
 
 Chọn YES ở màn hình trên trong quá trình cài đặt
 
