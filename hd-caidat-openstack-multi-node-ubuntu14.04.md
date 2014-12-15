@@ -328,9 +328,25 @@ Kết thúc cài đặt trên NETWORK NODE và chuyển sang cài đặt COMPUTE
 
 <a name="E"></a>
 ### E. CÀI ĐẶT TRÊN COMPUTE NODE (COMPUTE1)
-Lưu ý: Cần thực hiện bước tải script từ github về như hướng dẫn ở bước B.1 và B.2 (nếu có thay đổi IP)
-Thực hiện các shell dưới để thiết lập hostname, gán ip và cài đặt các thành phần của nove trên máy COMPUTE NODE
+- Lưu ý: Cần thực hiện bước tải script từ github về như hướng dẫn ở bước B.1 và B.2 (nếu có thay đổi IP)
+- Thực hiện các shell dưới để thiết lập hostname, gán ip và cài đặt các thành phần của nove trên máy COMPUTE NODE
+- Truy cập bằng tài khoản root vào máy các máy chủ và tải các gói, script chuẩn bị cho quá trình cài đặt
 
+```sh
+apt-get update
+
+apt-get install git -y
+	
+git clone https://github.com/vietstacker/openstack-juno-multinode-U14.04-v1.git
+	
+mv /root/openstack-juno-multinode-U14.04-v1/juno-ubuntu14.04/ juno-ubuntu14.04
+
+rm -rf openstack-juno-multinode-U14.04-v1
+
+cd juno-ubuntu14.04/
+
+chmod +x *.sh
+```
 #### E.1. Đặt hostname, IP và các gói bổ trợ
 
     bash com1-ipdd.sh
@@ -378,22 +394,6 @@ Sau khi thực hiện xong shell trên các NICs của COMPUTE NODE sẽ như sa
 COMPUTE node sẽ khởi động lại, cần phải đăng nhập bằng tải khoản root để thực hiện shell dưới
     
 #### E.2. Cài đặt các gói của NOVA cho COMPUTE NODE
-Truy cập bằng tài khoản root vào máy các máy chủ và tải các gói, script chuẩn bị cho quá trình cài đặt
-```sh
-apt-get update
-
-apt-get install git -y
-	
-git clone https://github.com/vietstacker/openstack-juno-multinode-U14.04-v1.git
-	
-mv /root/openstack-juno-multinode-U14.04-v1/juno-ubuntu14.04/ juno-ubuntu14.04
-
-rm -rf openstack-juno-multinode-U14.04-v1
-
-cd juno-ubuntu14.04/
-
-chmod +x *.sh
-```
 Đăng nhập bằng tài khoản root và thực thi các lệnh dưới để tiến hành cài đặt nova
 
 ```sh
