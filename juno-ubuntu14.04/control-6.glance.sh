@@ -2,18 +2,18 @@
 #
 source config.cfg
 
-echo "########## CAI DAT GLANCE ##########"
+echo "########## Install GLANCE ##########"
 apt-get -y install glance python-glanceclient
 sleep 10
-echo "########## CAU HINH GLANCE API ##########"
+echo "########## Configuring GLANCE API ##########"
 sleep 5 
-#/* Sao luu truoc khi sua file nova.conf
+#/* Back-up file nova.conf
 fileglanceapicontrol=/etc/glance/glance-api.conf
 test -f $fileglanceapicontrol.orig || cp $fileglanceapicontrol $fileglanceapicontrol.orig
 rm $fileglanceapicontrol
 touch $fileglanceapicontrol
 
-#Chen noi dung file /etc/glance/glance-api.conf
+#Configuring glance config file /etc/glance/glance-api.conf
 
 cat << EOF > $fileglanceapicontrol
 [DEFAULT]
@@ -98,13 +98,13 @@ EOF
 
 #
 sleep 10
-echo "########## CAU HINH GLANCE REGISTER ##########"
-#/* Sao luu truoc khi sua file nova.conf
+echo "########## Configuring GLANCE REGISTER ##########"
+#/* Backup file file glance-registry.conf
 fileglanceregcontrol=/etc/glance/glance-registry.conf
 test -f $fileglanceregcontrol.orig || cp $fileglanceregcontrol $fileglanceregcontrol.orig
 rm $fileglanceregcontrol
 touch $fileglanceregcontrol
-#Chen noi dung file /etc/glance/glance-registry.conf
+#Config file /etc/glance/glance-registry.conf
 
 cat << EOF > $fileglanceregcontrol
 [DEFAULT]
@@ -156,15 +156,15 @@ flavor = keystone
 EOF
 
 sleep 7
-echo "########## XOA file glance.sqlite ##########"
+echo "########## Remove Glance default DB ##########"
 # rm /var/lib/glance/glance.sqlite
 
 sleep 7
-echo "########## DONG BO DATABASE CHO GLANCE ##########"
+echo "########## Syncing DB for Glance ##########"
 glance-manage db_sync
 
 sleep 5
-echo "########## KHOI DONG LAI GLANCE ##########"
+echo "########## Restarting GLANCE service ... ##########"
 service glance-registry restart
 service glance-api restart
 sleep 3
@@ -173,7 +173,7 @@ service glance-api restart
 
 #
 sleep 3
-echo "########## ADD THEM IMAGE CHO GLANCE ##########"
+echo "########## Registering Cirros IMAGE for GLANCE ... ##########"
 mkdir images
 cd images/
 wget http://cdn.download.cirros-cloud.net/0.3.3/cirros-0.3.3-x86_64-disk.img
@@ -183,5 +183,5 @@ cd /root/
 # rm -r /tmp/images
 
 sleep 5
-echo "########## Kiem tra lai image vua them vao GLANCE ##########"
+echo "########## Testing Glance ##########"
 glance image-list

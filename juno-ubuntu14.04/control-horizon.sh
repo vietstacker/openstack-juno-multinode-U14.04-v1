@@ -3,20 +3,20 @@
 source config.cfg
 
 ###################
-echo "########## CAI DAT DASHBOARD ##########"
+echo "########## START INSTALLING OPS DASHBOARD ##########"
 ###################
 sleep 5
 
-echo "########## Cài đặt Dashboard ##########"
+echo "########## Installing Dashboard package ##########"
 apt-get -y install openstack-dashboard memcached && dpkg --purge openstack-dashboard-ubuntu-theme
 
-echo "########## Cau hinh fix loi cho apache2 ##########"
+echo "########## Fix bug in apache2 ##########"
 sleep 5
-# Fix loi apache cho ubuntu 14.04
+# Fix bug apache in ubuntu 14.04
 echo "ServerName localhost" > /etc/apache2/conf-available/servername.conf
 sudo a2enconf servername 
 
-echo "########## Tao trang redirect ##########"
+echo "########## Creating redirect page ##########"
 
 filehtml=/var/www/html/index.html
 test -f $filehtml.orig || cp $filehtml $filehtml.orig
@@ -32,15 +32,15 @@ cat << EOF >> $filehtml
 </body>
 </html>
 EOF
-# Cho phep chen password tren dashboad ( chi ap dung voi image tu dong )
+# Allowing insert password in dashboard ( only apply in image )
 sed -i "s/'can_set_password': False/'can_set_password': True/g" /etc/openstack-dashboard/local_settings.py
 
-## /* Khởi động lại apache và memcached
+## /* Restarting apache2 and memcached
 service apache2 restart
 service memcached restart
-echo "########## Hoan thanh cai dat Horizon ##########"
+echo "########## Finish setting up Horizon ##########"
 
-echo "########## THONG TIN DANG NHAP VAO HORIZON ##########"
+echo "########## LOGIN INFORMATION IN HORIZON ##########"
 echo "URL: http://$CON_EXT_IP/horizon"
-echo "User: admin hoac demo"
+echo "User: admin or demo"
 echo "Password:" $ADMIN_PASS

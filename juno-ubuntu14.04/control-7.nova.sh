@@ -2,11 +2,11 @@
 #
 source config.cfg
 
-echo "########## CAI DAT NOVA TREN $CON_MGNT_IP ##########"
+echo "########## Install NOVA in $CON_MGNT_IP ##########"
 sleep 5 
 apt-get -y install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient
 
-######## SAO LUU CAU HINH cho NOVA ##########"
+######## Backup configurations for NOVA ##########"
 sleep 7
 
 #
@@ -30,7 +30,7 @@ ec2_private_dns_show_ip=True
 api_paste_config=/etc/nova/api-paste.ini
 enabled_apis=ec2,osapi_compute,metadata
 
-# Khai bao cho RabbitMQ
+# Register with RabbitMQ
 rpc_backend = rabbit
 rabbit_host = $CON_MGNT_IP
 rabbit_password = $RABBIT_PASS
@@ -75,18 +75,18 @@ admin_password = $NOVA_PASS
 
 EOF
 
-echo "########## XOA FILE DB MAC DINH ##########"
+echo "########## Remove Nova default db ##########"
 sleep 7
 rm /var/lib/nova/nova.sqlite
 
-echo "########## DONG BO DB CHO NOVA ##########"
+echo "########## Syncing Nova DB ##########"
 sleep 7 
 nova-manage db sync
 
-# fix loi libvirtError: internal error: no supported architecture for os type 'hvm'
+# fix bug libvirtError: internal error: no supported architecture for os type 'hvm'
 echo 'kvm_intel' >> /etc/modules
 
-echo "########## KHOI DONG LAI NOVA ##########"
+echo "########## Restarting NOVA ... ##########"
 sleep 7 
 service nova-api restart
 service nova-cert restart
@@ -95,7 +95,7 @@ service nova-scheduler restart
 service nova-conductor restart
 service nova-novncproxy restart
 sleep 7 
-echo "########## KHOI DONG NOVA LAN 2 ##########"
+echo "########## Restarting NOVA ... ##########"
 service nova-api restart
 service nova-cert restart
 service nova-consoleauth restart
@@ -103,6 +103,6 @@ service nova-scheduler restart
 service nova-conductor restart
 service nova-novncproxy restart
 
-echo "########## KIEM TRA LAI DICH VU NOVA ##########"
+echo "########## Testing NOVA service ##########"
 nova-manage service list
 

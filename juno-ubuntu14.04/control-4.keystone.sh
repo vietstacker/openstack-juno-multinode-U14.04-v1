@@ -6,14 +6,14 @@
 # ADMIN_PASS=a
 source config.cfg
 
-echo "##### Cai dat keystone #####"
+echo "##### Install keystone #####"
 apt-get -y install keystone python-keystoneclient 
 
-#/* Sao luu truoc khi sua file nova.conf
+#/* Back-up file nova.conf
 filekeystone=/etc/keystone/keystone.conf
 test -f $filekeystone.orig || cp $filekeystone $filekeystone.orig
 
-#Chen noi dung file /etc/keystone/keystone.conf
+#Config file /etc/keystone/keystone.conf
 cat << EOF > $filekeystone
 [DEFAULT]
 verbose = True
@@ -60,15 +60,15 @@ Distribution = Ubuntu
 EOF
 
 #
-echo "##### Xoa DB mac dinh #####"
+echo "##### Remove keystone default db #####"
 rm  /var/lib/keystone/keystone.db
 
-echo "##### Khoi dong lai MYSQL #####"
+echo "##### Restarting keystone service #####"
 service keystone restart
 sleep 3
 service keystone restart
 
-echo "##### Dong bo cac bang trong DB #####"
+echo "##### Syncing keystone DB #####"
 sleep 3
 keystone-manage db_sync
 

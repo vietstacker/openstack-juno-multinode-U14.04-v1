@@ -2,7 +2,7 @@
 #
 source config.cfg
 
-echo "Cau hinh cho file /etc/hosts"
+echo "Configuring for file /etc/hosts"
 sleep 3
 iphost=/etc/hosts
 test -f $iphost.orig || cp $iphost $iphost.orig
@@ -17,7 +17,7 @@ $COM2_MGNT_IP	compute2
 $NET_MGNT_IP     network
 EOF
 
-# Cai dat repos va update
+# Update repos
 apt-get install ubuntu-cloud-keyring -y
 echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
 "trusty-updates/juno main" > /etc/apt/sources.list.d/cloudarchive-juno.list
@@ -26,7 +26,7 @@ sleep 5
 echo "UPDATE PACKAGE FOR JUNO"
 apt-get -y update && apt-get -y dist-upgrade
 
-echo "Cai dat NTP va cau hinh NTP"
+echo "Install and config NTP"
 sleep 3 
 apt-get install ntp -y
 cp /etc/ntp.conf /etc/ntp.conf.bka
@@ -51,11 +51,11 @@ restrict -6 default kod notrap nomodify/g' /etc/ntp.conf
 # echo "server controller" >> /etc/ntp.conf
 
 ##############################################
-echo "Cai dat RABBITMQ  va cau hinh RABBITMQ"
+echo "Install and Config RabbitMQ"
 sleep 3
 apt-get install rabbitmq-server -y
 rabbitmqctl change_password guest $RABBIT_PASS
 sleep 3
 
 service rabbitmq-server restart
-echo "Da cai dat xong cac goi chuan bi"
+echo "Finish setup pre-install package !!!"

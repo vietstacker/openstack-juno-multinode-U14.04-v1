@@ -3,18 +3,18 @@ source config.cfg
 
 apt-get install lvm2 -y
 
-echo "########## Tao Physical Volume va Volume Group (tren disk sdb ) ##########"
+echo "########## Create Physical Volume and Volume Group (in sdb disk ) ##########"
 fdisk -l
 pvcreate /dev/sdb
 vgcreate cinder-volumes /dev/sdb
 
 #
-echo "########## Cai dat cac goi cho CINDER ##########"
+echo "########## Install CINDER ##########"
 sleep 3
 apt-get install -y cinder-api cinder-scheduler cinder-volume iscsitarget open-iscsi iscsitarget-dkms python-cinderclient
 
 
-echo "########## Cau hinh file cho cinder.conf ##########"
+echo "########## Configuring for cinder.conf ##########"
 
 filecinder=/etc/cinder/cinder.conf
 test -f $filecinder.orig || cp $filecinder $filecinder.orig
@@ -56,17 +56,17 @@ EOF
 
 sed  -r -e 's#(filter = )(\[ "a/\.\*/" \])#\1[ "a\/sda1\/", "a\/sdb\/", "r/\.\*\/"]#g' /etc/lvm/lvm.conf
 
-# Phan quyen cho file cinder
+# Grant permission for cinder
 chown cinder:cinder $filecinder
 
-echo "########## Dong bo cho cinder ##########"
+echo "########## Syncing Cinder DB ##########"
 sleep 3
 cinder-manage db sync
 
-echo "########## Khoi dong lai CINDER ##########"
+echo "########## Restarting CINDER service ##########"
 sleep 3
 service cinder-api restart
 service cinder-scheduler restart
 service cinder-volume restart
 
-echo "########## Hoan thanh viec cai dat CINDER ##########"
+echo "########## Finish setting up CINDER !!! ##########"

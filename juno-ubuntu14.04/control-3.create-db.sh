@@ -3,14 +3,14 @@
 #Khai bao bien
 source config.cfg
  
-echo "##### Cai dat MYSQL #####"
+echo "##### Install MYSQL #####"
 sleep 3
 
 echo mysql-server mysql-server/root_password password $MYSQL_PASS | debconf-set-selections
 echo mysql-server mysql-server/root_password_again password $MYSQL_PASS | debconf-set-selections
 apt-get -y install mariadb-server python-mysqldb curl 
 
-echo "##### Cau hinh cho MYSQL #####"
+echo "##### Configuring MYSQL #####"
 sleep 3
 
 
@@ -28,7 +28,7 @@ character-set-server = utf8" /etc/mysql/my.cnf
 service mysql restart
 
 
-echo "##### Tao DATABASE #####"
+echo "##### Create OPS DATABASE #####"
 sleep 3
 
 cat << EOF | mysql -uroot -p$MYSQL_PASS
@@ -66,5 +66,5 @@ GRANT ALL PRIVILEGES ON neutron.* TO 'neutron'@'controller' IDENTIFIED BY '$NEUT
 FLUSH PRIVILEGES;
 EOF
 #
-echo "##### KET THUC QUA TRINH CAI VA TAO DB #####"
+echo "##### Finish setup and config OPS DB !! #####"
 exit;

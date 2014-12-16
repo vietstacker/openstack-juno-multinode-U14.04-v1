@@ -8,12 +8,12 @@ source config.cfg
 SERVICE_TENANT_ID=`keystone tenant-get service | awk '$2~/^id/{print $4}'`
 
 
-echo "########## CAI DAT NEUTRON TREN CONTROLLER################"
+echo "########## Install NEUTRON in CONTROLLER or NETWORK node ################"
 sleep 5
 apt-get -y install neutron-server neutron-plugin-ml2 python-neutronclient
 
-######## SAO LUU CAU HINH NEUTRON.CONF CHO CONTROLLER##################"
-echo "########## SUA FILE CAU HINH  NEUTRON CHO CONTROLLER ##########"
+######## Backup configuration NEUTRON.CONF in CONTROLLER##################"
+echo "########## Config NEUTRON in CONTROLLER/NETWORK node ##########"
 sleep 7
 
 #
@@ -69,8 +69,8 @@ service_provider=VPN:openswan:neutron.services.vpn.service_drivers.ipsec.IPsecVP
 EOF
 
 
-######## SAO LUU CAU HINH ML2 CHO CONTROLLER##################"
-echo "########## SUA FILE CAU HINH  ML2 CHO CONTROLLER ##########"
+######## Backup configuration of ML2 in CONTROLLER##################"
+echo "########## Configuring ML2 in CONTROLLER/NETWORK node ##########"
 sleep 7
 
 controlML2=/etc/neutron/plugins/ml2/ml2_conf.ini
@@ -101,12 +101,12 @@ EOF
 su -s /bin/sh -c "neutron-db-manage --config-file /etc/neutron/neutron.conf \
 --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade juno" neutron
   
-echo "########## KHOI DONG LAI NOVA ##########"
+echo "########## Restarting NOVA service ##########"
 sleep 7 
 service nova-api restart
 service nova-scheduler restart
 service nova-conductor restart
 
-echo "########## KHOI DONG LAI NEUTRON ##########"
+echo "########## Restarting NEUTRON service ##########"
 sleep 7 
 service neutron-server restart

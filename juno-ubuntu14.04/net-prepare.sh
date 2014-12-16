@@ -3,7 +3,7 @@
 
 source config.cfg
 
-# Cau hinh cho file /etc/hosts
+# Config for file /etc/hosts
 iphost=/etc/hosts
 test -f $iphost.orig || cp $iphost $iphost.orig
 rm $iphost
@@ -18,22 +18,22 @@ $NET_MGNT_IP   	network
 EOF
 
 #
-echo "############ Cau hinh forward goi tin cho cac VM ############"
+echo "############ Configuring net forward for all VMs ############"
 sleep 7 
 echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
 echo "net.ipv4.conf.all.rp_filter=0" >> /etc/sysctl.conf
 echo "net.ipv4.conf.default.rp_filter=0" >> /etc/sysctl.conf
 sysctl -p 
 
-echo "############ Cai cac goi cho network node ############ "
+echo "############ Install packages in network node ############ "
 sleep 7 
 apt-get -y install neutron-plugin-ml2 neutron-plugin-openvswitch-agent neutron-l3-agent neutron-dhcp-agent
 
 #
-echo "############  CAU HINH CHO NETWORK NODE ############ "
+echo "############  Configuring for NETWORK NODE ############ "
 sleep 7 
 #
-echo "############ Sua file cau hinh neutron.conf ############"
+echo "############ Configuring neutron.conf ############"
 sleep 7 
 #
 netneutron=/etc/neutron/neutron.conf
@@ -76,7 +76,7 @@ service_provider=LOADBALANCER:Haproxy:neutron.services.loadbalancer.drivers.hapr
 service_provider=VPN:openswan:neutron.services.vpn.service_drivers.ipsec.IPsecVPNDriver:default
 EOF
 #
-echo "############ Sua file cau hinh L3 AGENT ############"
+echo "############ Configuring L3 AGENT ############"
 sleep 7 
 #
 netl3agent=/etc/neutron/l3_agent.ini
@@ -92,7 +92,7 @@ use_namespaces = True
 external_network_bridge = br-ex
 EOF
 #
-echo "############  Sua file cau hinh DHCP AGENT ############ "
+echo "############  Configuring DHCP AGENT ############ "
 sleep 7 
 #
 netdhcp=/etc/neutron/dhcp_agent.ini
@@ -109,7 +109,7 @@ use_namespaces = True
 verbose = True
 EOF
 #
-echo "############  Sua file cau hinh METADATA AGENT ############"
+echo "############  Configuring METADATA AGENT ############"
 sleep 7 
 #
 netmetadata=/etc/neutron/metadata_agent.ini
@@ -134,7 +134,7 @@ metadata_proxy_shared_secret = $METADATA_SECRET
 EOF
 #
 
-echo "############ Sua file cau hinh ML2 AGENT ############"
+echo "############ Configuring ML2 AGENT ############"
 sleep 7 
 #
 netml2=/etc/neutron/plugins/ml2/ml2_conf.ini
@@ -174,7 +174,7 @@ tunnel_types = gre
 
 EOF
 
-echo "############  Khoi dong lai OpenvSwitch ############"
+echo "############  Restarting OpenvSwitch ############"
 sleep 7
 
 service openvswitch-switch restart
@@ -183,7 +183,7 @@ service neutron-l3-agent restart
 service neutron-dhcp-agent restart
 service neutron-metadata-agent restart
 
-# Khai bao khoi dong cung may chu
+# Starting up with OS
 sed -i "s/exit 0/# exit 0/g" /etc/rc.local
 echo "service openvswitch-switch restart" >> /etc/rc.local
 echo "service neutron-plugin-openvswitch-agent restart" >> /etc/rc.local
@@ -195,14 +195,14 @@ echo "service neutron-lbaas-agent restart" >> /etc/rc.local
 echo "exit 0" >> /etc/rc.local
 
 
-echo "########## TAO FILE CHO BIEN MOI TRUONG ##########"
+echo "########## Creating environment script ##########"
 sleep 5
 echo "export OS_USERNAME=admin" > admin-openrc.sh
 echo "export OS_PASSWORD=$ADMIN_PASS" >> admin-openrc.sh
 echo "export OS_TENANT_NAME=admin" >> admin-openrc.sh
 echo "export OS_AUTH_URL=http://controller:35357/v2.0" >> admin-openrc.sh
 
-echo "############ kiem tra cac agent ############ "
+echo "############ Testing all agent ############ "
 sleep 1 
 
 

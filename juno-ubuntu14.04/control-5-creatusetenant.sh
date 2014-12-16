@@ -10,6 +10,7 @@ get_id () {
     echo `$@ | awk '/ id / { print $4 }'`
 }
 
+echo "########## Begin configuring tenants, users and roles in Keystone ##########"
 # Tenants
 ADMIN_TENANT=$(get_id keystone tenant-create --name=$ADMIN_TENANT_NAME)
 SERVICE_TENANT=$(get_id keystone tenant-create --name=$SERVICE_TENANT_NAME)
@@ -55,7 +56,7 @@ keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $NEUTRON_USER --rol
 CINDER_USER=$(get_id keystone user-create --name=cinder --pass="$SERVICE_PASSWORD" --tenant-id $SERVICE_TENANT --email=cinder@teststack.com)
 keystone user-role-add --tenant-id $SERVICE_TENANT --user-id $CINDER_USER --role-id $ADMIN_ROLE
 
-echo "########## Bat dau tao ENDPOINT cho cac dich vu ########## "
+echo "########## Begin create ENDPOINT for OPS service ########## "
 sleep 5 
 
 #API Endpoint
@@ -100,20 +101,20 @@ keystone endpoint-create \
 --internalurl=http://controller:8776/v2/%\(tenant_id\)s \
 --adminurl=http://controller:8776/v2/%\(tenant_id\)s
 
-echo "########## TAO FILE CHO BIEN MOI TRUONG ##########"
+echo "########## Creating environment script ##########"
 sleep 5
 echo "export OS_USERNAME=admin" > admin-openrc.sh
 echo "export OS_PASSWORD=$ADMIN_PASS" >> admin-openrc.sh
 echo "export OS_TENANT_NAME=admin" >> admin-openrc.sh
 echo "export OS_AUTH_URL=http://controller:35357/v2.0" >> admin-openrc.sh
 
-echo "########## Huy bien moi truong truoc do ##########"
+echo "########## Unset previous environment variable ##########"
 unset OS_SERVICE_TOKEN OS_SERVICE_ENDPOINT
 chmod +x admin-openrc.sh
 
 
 sleep 5
-echo "########## Thuc thi bien moi truong ##########"
+echo "########## Execute environment script ##########"
 # source admin-openrc.sh
 cat  admin-openrc.sh >> /etc/profile
 cp  admin-openrc.sh /root/admin-openrc.sh
@@ -123,8 +124,8 @@ cp  admin-openrc.sh /root/admin-openrc.sh
 # export OS_TENANT_NAME=admin
 # export OS_AUTH_URL=http://controller:35357/v2.0
 
-echo "########## Hoan thanh cai dat keystone ##########"
+echo "########## Finish setup keystone ##########"
 
-# echo "#################### Kiem tra bien moi truong ##################"
+# echo "#################### Testing ##################"
 # sleep 5
 # keystone user-list

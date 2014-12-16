@@ -6,7 +6,7 @@ test -f $ifaces.orig || cp $ifaces $ifaces.orig
 rm $ifaces
 touch $ifaces
 cat << EOF >> $ifaces
-#Dat IP cho Controller node
+#Assign IP for Controller node
 
 # LOOPBACK NET 
 auto lo
@@ -29,7 +29,7 @@ dns-nameservers 8.8.8.8
 EOF
 
 
-echo "Cau hinh hostname cho CONTROLLER NODE"
+echo "Configuring hostname in CONTROLLER node"
 sleep 3
 echo "controller" > /etc/hostname
 hostname -F /etc/hostname

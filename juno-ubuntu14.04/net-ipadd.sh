@@ -2,23 +2,23 @@
 
 
 source config.cfg
-#Update cho Ubuntu
+#Update Ubuntu
 apt-get -y install ubuntu-cloud-keyring
 echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
 "trusty-updates/juno main" > /etc/apt/sources.list.d/cloudarchive-juno.list
 
 apt-get update -y && apt-get upgrade -y && apt-get dist-upgrade -y
 
-echo "########## Cai dat va cau hinh OpenvSwitch ##########"
+echo "########## Install and Config OpenvSwitch ##########"
 apt-get install -y openvswitch-controller openvswitch-switch openvswitch-datapath-dkms
 
-echo "############ Cai dat NTP va cau hinh can thiet ############ "
+echo "############ Install and Config NTP ############ "
 sleep 7 
 
 apt-get install ntp -y
 apt-get install python-mysqldb -y
 #
-echo "############ Sao luu cau hinh cua NTP ############ "
+echo "############ Back-up NTP configuration ############ "
 sleep 7 
 cp /etc/ntp.conf /etc/ntp.conf.bka
 rm /etc/ntp.conf
@@ -39,13 +39,13 @@ sed -i 's/server 3.ubuntu.pool.ntp.org/ \
 sed -i "s/server ntp.ubuntu.com/server $CON_MGNT_IP iburst/g" /etc/ntp.conf
 
 
-echo "########## Cau hinh br-int va br-ex cho OpenvSwitch ##########"
+echo "########## Config br-int and br-ex for OpenvSwitch ##########"
 sleep 5
 ovs-vsctl add-br br-int
 ovs-vsctl add-br br-ex
 ovs-vsctl add-port br-ex eth1
 
-echo "########## Cau hinh dia chi IP cho br-ex ##########"
+echo "########## Config IP address for br-ex ##########"
 
 ifaces=/etc/network/interfaces
 test -f $ifaces.orig1 || cp $ifaces $ifaces.orig1
@@ -81,11 +81,11 @@ address $NET_DATA_VM_IP
 netmask $NETMASK_ADD
 EOF
 
-echo "Cau hinh hostname cho NETWORK NODE"
+echo "Config hostname for NETWORK NODE"
 sleep 3
 echo "network" > /etc/hostname
 hostname -F /etc/hostname
 
-echo "##########  Khoi dong lai may sau khi cau hinh IP Address ##########"
+echo "##########  Reboot machine after configuring IP ... ##########"
 init 6
 
