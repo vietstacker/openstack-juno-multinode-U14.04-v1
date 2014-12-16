@@ -17,7 +17,7 @@ $COM2_MGNT_IP	compute2
 $NET_MGNT_IP     network
 EOF
 
-# Cai dat repos va update
+# Update repos
 
 apt-get -y update
 apt-get -y install nova-compute sysfsutils
@@ -43,7 +43,7 @@ EOF
 
 chmod +x /etc/kernel/postinst.d/statoverride
 ########
-echo "############ Cau hinh nova.conf ############"
+echo "############ Configuring in nova.conf ...############"
 sleep 5
 ########
 #/* Sao luu truoc khi sua file nova.conf
@@ -105,32 +105,32 @@ admin_user = nova
 admin_password = $NOVA_PASS
 EOF
 
-# Xoa file sql mac dinh
+# Remove default nova db
 rm /var/lib/nova/nova.sqlite
 
 
-# fix loi libvirtError: internal error: no supported architecture for os type 'hvm'
+# fix bug libvirtError: internal error: no supported architecture for os type 'hvm'
 echo 'kvm_intel' >> /etc/modules
 
-# Khoi dong lai nova
+# Restarting nova service
 service nova-compute restart
 service nova-compute restart
 
 ########
-echo "############ Cai dat neutron agent ############"
+echo "############ Installing neutron agent ############"
 sleep 5
 ########
-# Cai dat neutron agent
+# Install neutron agent
 apt-get install neutron-common neutron-plugin-ml2 neutron-plugin-openvswitch-agent openvswitch-datapath-dkms -y
 
 ##############################
-echo "############ Cau hinh neutron.conf ############"
+echo "############ Configuring neutron.conf ############"
 sleep 5
 #############################
 comfileneutron=/etc/neutron/neutron.conf
 test -f $comfileneutron.orig || cp $comfileneutron $comfileneutron.orig
 rm $comfileneutron
-#Chen noi dung file /etc/neutron/neutron.conf
+#Update config file /etc/neutron/neutron.conf
  
 cat << EOF > $comfileneutron
 [DEFAULT]
@@ -170,14 +170,14 @@ EOF
 #
 
 ########
-echo "############ Cau hinh ml2_conf.ini ############"
+echo "############ Configuring ml2_conf.ini ############"
 sleep 5
 ########
 comfileml2=/etc/neutron/plugins/ml2/ml2_conf.ini
 test -f $comfileml2.orig || cp $comfileml2 $comfileml2.orig
 rm $comfileml2
 touch $comfileml2
-#Chen noi dung file  vao /etc/neutron/plugins/ml2/ml2_conf.ini
+#Update ML2 config file /etc/neutron/plugins/ml2/ml2_conf.ini
 cat << EOF > $comfileml2
 [ml2]
 type_drivers = flat,gre
@@ -204,43 +204,43 @@ tunnel_types = gre
 
 EOF
 
-# Khoi dong lai OpenvSwitch
+# Restarting OpenvSwitch
 ########
-echo "############ Khoi dong lai OpenvSwitch ############"
+echo "############ Restarting OpenvSwitch ############"
 sleep 5
 ########
 service openvswitch-switch restart
 
 
 ########
-echo "############ Tao integration bridge ############"
+echo "############ Create Integration Bridge ############"
 sleep 5
 ########
-# Tao integration bridge
+# Create Integration Bridge
 # ovs-vsctl add-br br-int
 
 
-# fix loi libvirtError: internal error: no supported architecture for os type 'hvm'
+# fix bug libvirtError: internal error: no supported architecture for os type 'hvm'
 echo 'kvm_intel' >> /etc/modules
 
 ##########
-echo "############ Khoi dong lai Compute ############"
+echo "############ Restarting Nova Compute service ############"
 sleep 5
 
 ########
-# Khoi dong lai Compute
+# Restarting Nova Compute service
 service nova-compute restart
 service nova-compute restart
 
 ########
-echo "############ Khoi dong lai Openvswitch agent ############"
+echo "############ Restarting OpenvSwitch agent ############"
 sleep 5
 ########
-# Khoi dong lai Openvswitch agent
+# Restarting OpenvSwitch agent
 service neutron-plugin-openvswitch-agent restart
 service neutron-plugin-openvswitch-agent restart
 
-echo "########## TAO FILE CHO BIEN MOI TRUONG ##########"
+echo "########## Creating Environment script file ##########"
 sleep 5
 echo "export OS_USERNAME=admin" > admin-openrc.sh
 echo "export OS_PASSWORD=$ADMIN_PASS" >> admin-openrc.sh
@@ -248,7 +248,7 @@ echo "export OS_TENANT_NAME=admin" >> admin-openrc.sh
 echo "export OS_AUTH_URL=http://controller:35357/v2.0" >> admin-openrc.sh
 
 ########
-echo "############ KIEM TRA LAI NOVA va NEUTRON ############"
+echo "############ Testing nova and neutron ############"
 sleep 5
 ########
 source admin-openrc.sh
