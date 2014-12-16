@@ -3,7 +3,7 @@
 
 source config.cfg
 
-# Cau hinh cho file /etc/hosts
+# Configuring for /etc/hosts
 # COM1_IP_MGNT=10.10.10.73
 # COM1_IP_DATA=10.10.20.73
 # COM2_IP_MGNT=10.10.10.74
@@ -26,7 +26,7 @@ $COM2_MGNT_IP      compute2
 $NET_MGNT_IP     network
 EOF
 
-# Cai dat repos va update
+# Update repos
 
 apt-get install -y python-software-properties &&  add-apt-repository cloud-archive:icehouse -y 
 apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade 
@@ -36,20 +36,20 @@ apt-get update && apt-get -y upgrade && apt-get -y dist-upgrade
 # apt-get dist-upgrade -y
 
 ########
-echo "############ Cai dat NTP ############"
+echo "############ Install NTP service ############"
 ########
-#Cai dat NTP va cau hinh can thiet 
+#Install NTP 
 apt-get install ntp -y
 apt-get install python-mysqldb -y
 
-# Cai cac goi can thiet cho compute 
+# Install compute package
 apt-get install nova-compute-kvm python-guestfs -y
 
 ########
-echo "############ Cau hinh NTP ############"
+echo "############ Configuring NTP ############"
 sleep 10
 ########
-# Cau hinh ntp
+# Configuring ntp
 cp /etc/ntp.conf /etc/ntp.conf.bka
 rm /etc/ntp.conf
 cat /etc/ntp.conf.bka | grep -v ^# | grep -v ^$ >> /etc/ntp.conf
@@ -77,14 +77,14 @@ EOF
 
 chmod +x /etc/kernel/postinst.d/statoverride
 ########
-echo "############ Cau hinh nova.conf ############"
+echo "############ Configuring nova.conf ############"
 sleep 5
 ########
-#/* Sao luu truoc khi sua file nova.conf
+#/* Backup file nova.conf
 filenova=/etc/nova/nova.conf
 test -f $filenova.orig || cp $filenova $filenova.orig
 
-#Chen noi dung file /etc/nova/nova.conf vao 
+#Update config in /etc/nova/nova.conf  
 cat << EOF > $filenova
 [DEFAULT]
 network_api_class = nova.network.neutronv2.api.API
@@ -134,32 +134,32 @@ admin_user = nova
 admin_password = $ADMIN_PASS
 EOF
 
-# Xoa file sql mac dinh
+# Remove nova default db
 rm /var/lib/nova/nova.sqlite
 
 
-# fix loi libvirtError: internal error: no supported architecture for os type 'hvm'
+# fix bug libvirtError: internal error: no supported architecture for os type 'hvm'
 echo 'kvm_intel' >> /etc/modules
  
-# Khoi dong lai nova
+# Restart nova-compute service
 service nova-compute restart
 service nova-compute restart
 
 ########
-echo "############ Cai dat neutron agent ############"
+echo "############ Installing neutron agent ############"
 sleep 5
 ########
-# Cai dat neutron agent
+# Installing neutron agent
 apt-get install neutron-common neutron-plugin-ml2 neutron-plugin-openvswitch-agent openvswitch-datapath-dkms -y
 
 ##############################
-echo "############ Cau hinh neutron.conf ############"
+echo "############ Configuring neutron.conf ############"
 sleep 5
 #############################
 comfileneutron=/etc/neutron/neutron.conf
 test -f $comfileneutron.orig || cp $comfileneutron $comfileneutron.orig
 rm $comfileneutron
-#Chen noi dung file /etc/neutron/neutron.conf
+#Configuring in /etc/neutron/neutron.conf
  
 cat << EOF > $comfileneutron
 [DEFAULT]
@@ -198,14 +198,14 @@ EOF
 #
 
 ########
-echo "############ Cau hinh ml2_conf.ini ############"
+echo "############ Configuring ml2_conf.ini ############"
 sleep 5
 ########
 comfileml2=/etc/neutron/plugins/ml2/ml2_conf.ini
 test -f $comfileml2.orig || cp $comfileml2 $comfileml2.orig
 rm $comfileml2
 touch $comfileml2
-#Chen noi dung file  vao /etc/neutron/plugins/ml2/ml2_conf.ini
+#Configuring in /etc/neutron/plugins/ml2/ml2_conf.ini
 cat << EOF > $comfileml2
 [ml2]
 type_drivers = gre
@@ -232,27 +232,27 @@ enable_security_group = True
 
 EOF
 
-# Khoi dong lai OpenvSwitch
+# Restarting OpenvSwitch
 ########
-echo "############ Khoi dong lai OpenvSwitch ############"
+echo "############ Restarting OpenvSwitch ############"
 sleep 5
 ########
 service openvswitch-switch restart
 
 
 ########
-echo "############ Tao integration bridge ############"
+echo "############ Create Integration Bridge ############"
 sleep 5
 ########
-# Tao integration bridge
+# Create integration bridge
 ovs-vsctl add-br br-int
 
 
-# fix loi libvirtError: internal error: no supported architecture for os type 'hvm'
+# fix bug libvirtError: internal error: no supported architecture for os type 'hvm'
 echo 'kvm_intel' >> /etc/modules
 
 ##########
-echo "############ Khoi dong lai Compute ############"
+echo "############ Restarting Nova Compute service ############"
 sleep 5
 
 ########
@@ -261,14 +261,14 @@ service nova-compute restart
 service nova-compute restart
 
 ########
-echo "############ Khoi dong lai Openvswitch agent ############"
+echo "############ Restarting OpenvSwitch agent ############"
 sleep 5
 ########
-# Khoi dong lai Openvswitch agent
+# Restarting Openvswitch agent
 service neutron-plugin-openvswitch-agent restart
 service neutron-plugin-openvswitch-agent restart
 
-echo "########## TAO FILE CHO BIEN MOI TRUONG ##########"
+echo "########## Creating environment script ##########"
 sleep 5
 echo "export OS_USERNAME=admin" > admin-openrc.sh
 echo "export OS_PASSWORD=$ADMIN_PASS" >> admin-openrc.sh
@@ -276,7 +276,7 @@ echo "export OS_TENANT_NAME=admin" >> admin-openrc.sh
 echo "export OS_AUTH_URL=http://controller:35357/v2.0" >> admin-openrc.sh
 
 ########
-echo "############ KIEM TRA LAI NOVA va NEUTRON ############"
+echo "############ Testing NOVA and NEUTRON service ############"
 sleep 5
 ########
 source admin-openrc.sh
