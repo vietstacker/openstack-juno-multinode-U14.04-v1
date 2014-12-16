@@ -2,7 +2,7 @@
 
 source config.cfg
 
-echo "Cau hinh hostname cho COMPUTE2 NODE"
+echo "##### Configuring hostname for COMPUTE2 node #####"
 sleep 3
 echo "compute2" > /etc/hostname
 hostname -F /etc/hostname
@@ -13,7 +13,7 @@ test -f $ifaces.orig || cp $ifaces $ifaces.orig
 rm $ifaces
 touch $ifaces
 cat << EOF >> $ifaces
-#Dat IP cho Controller node
+#Setup IP for Controller node
 
 # LOOPBACK NET 
 auto lo
@@ -42,7 +42,7 @@ netmask $NETMASK_ADD
 
 EOF
 
-#Khoi dong lai cac card mang vua dat
+#Restart network service
 #service networking restart
 
 #service networking restart
