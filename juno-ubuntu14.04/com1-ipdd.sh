@@ -2,14 +2,14 @@
 
 source config.cfg
 
-#Update cho Ubuntu
+#Update for Ubuntu
 apt-get -y install ubuntu-cloud-keyring
 echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
 "trusty-updates/juno main" > /etc/apt/sources.list.d/cloudarchive-juno.list
 
 apt-get update -y && apt-get upgrade -y && apt-get dist-upgrade -y
 
-echo "Cau hinh hostname cho COMPUTE1 NODE"
+echo "Configuring hostname for COMPUTE1 node..."
 sleep 3
 echo "compute1" > /etc/hostname
 hostname -F /etc/hostname
@@ -17,7 +17,7 @@ hostname -F /etc/hostname
 apt-get install ntp -y
 apt-get install python-mysqldb -y
 #
-echo "############ Sao luu cau hinh cua NTP ############ "
+echo "############ Backup NTP configuration... ############ "
 sleep 7 
 cp /etc/ntp.conf /etc/ntp.conf.bka
 rm /etc/ntp.conf
@@ -73,7 +73,7 @@ netmask $NETMASK_ADD
 EOF
 
 sleep 5
-echo "##### KHOI DONG LAI MAY #####"
+echo "##### Rebooting machine ... #####"
 init 6
 #
 
