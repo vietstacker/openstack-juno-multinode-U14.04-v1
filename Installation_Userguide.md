@@ -1,87 +1,86 @@
-Hướng dẫn chạy script cài đặt OpenStack Juno trên nhiều máy chủ
+Openstack Juno installation guide on multinode
 ===
-# Mục lục
+# Content
+[A. Lab information](#Labinformation)
 
-[A. Thông tin LAB](#thongtinlab)
+[A.0 Preparations on VMware Workstation](#vmwarepreparation)
 
-[A.0 Chuẩn bị trên VMware Workstation](#chuanbitrenvmware)
+[A.1. Deployment model on VMware Workstation] (#deployment)
 
-[A.1. Mô hình triển khai trong môi trường VMware Workstation] (#mohinhtrienkhai)
+[A.2 Nodes configuration](#nodeconfig)
 
-[A.2 Thiết lập cho từng node](#thietlapchotungnode)
+[B. General execution steps](#B)
 
-[B. Các bước thực hiện chung](#B)
+[C. Installation on CONTROLLER NODE ](#C)
 
-[C. Thực hiện trên CONTROLLER NODE](#C)
+[D. Installation on NETWORK NODE](#D)
 
-[D. CÀI ĐẶT TRÊN NETWORK NODE](#D)
+[ E. Installation on COMPUTE NODE](#E)
 
-[ E. CÀI ĐẶT TRÊN COMPUTE NODE](#E)
+[F. Installing HORIZON, creating networks on CONTROLLER NODE](#F)
 
-[F. CÀI HORIZON, tạo các network trên CONTROLLER NODE](#F)
-
-[KÊT THÚC](#ketthuc)
+[End](#end)
 
 
-<a name="thongtinlab"></a>
-### A. Thông tin LAB
-<a name="chuanbitrenvmware"></a>
-#### A.0. Chuẩn bị trên VMware Workstation
-<b> Cấu hình các vmnet trong vmware workdstation như hình dưới. (Đảm bảo các dải thiết lập đúng với từng vmnet)</b>
-- VMNET0 - Chế độ bridge (mặc định). Nhận cùng dải IP card mạng trong laptop, 192.168.1.0/24
-- VMNET2 - Chế độ VMNET 2. Đặt dải IP 10.10.10.0/24
-- VMNET3 - Chế độ VMNET 3. Đặt dải IP 10.10.20.0/24
-Vào tab "Edit" ==> Virtual Network Editor.
+<a name="Labinformation"></a>
+### A. LAB information
+<a name="vmwarepreparation"></a>
+#### A.0. Preparations on VMware Workstation
+<b> Configurations of vmnets on vmware workdstation in the following figures.</b>
+- VMNET0 - Bridge mode, 192.168.1.0/24
+- VMNET2 - VMNET 2. IP range: 10.10.10.0/24
+- VMNET3 - VMNET 3. IP range: 10.10.20.0/24
+Go to "Edit" tab ==> Virtual Network Editor.
 ![Alt text](http://i.imgur.com/qQkp9EE.png)
 
-<a name="mohinhtrienkhai"></a>
-#### A.1. Mô hình triển khai trong môi trường VMware Workstation
-Mô hình 3 node cài đặt OpenStack bên trong một máy LAPTOP
+<a name="deployment"></a>
+#### A.1. Deployment model in VMware Workstation
+3 nodes model of Openstack deployment in a laptop.
 
 ![Alt text](http://i.imgur.com/1htxCxz.png)
 
-<a name="thietlapchotungnode"></a>
-#### A.2. Thiết lập cho từng node
+<a name="nodeconfig"></a>
+#### A.2. Configuration of each node
 
-- Khi cài đặt UBUNTU trong Vmware Workstation đảm bảo đúng thứ tự network
-- Địa chỉ IP của các NICs để động, các shell sẽ tự động gán IP tĩnh sau (khai báo trong file <b><i> config.cfg </i></b>
+- Ubuntu installation in Vmware Workstation must be ensured by the order of network.
+- Ip addresses of NICs are dynamic, shell scripts will automatically assign static IPs later.(written in files<b><i> config.cfg </i></b>
 
-##### A.2.1. Cấu hình tối hiểu cho máy CONTROLLER
-- HDD: 20GB trở lên
-- RAM: 2GB trở lên
-- CPU: 02 (Có tích vào các chế độ ảo hóa)
-- NIC: 02 NICs (eth0 - chế độ vmnet2 ) (eth1 - chế độ brige). Đặt IP động 
+##### A.2.1. Minimum config of CONTROLLER
+- HDD: 20GB
+- RAM: 2GB 
+- CPU: 02 (Virtualization support)
+- NIC: 02 NICs (eth0 - vmnet2 ) (eth1 - brige). Dynamic IP. 
 
-Minh họa bằng hình như sau:
+As showed as following figure:
 ![Alt text](http://i.imgur.com/tlk95hq.png)
 
-##### A.2.2. Cấu hình tối thiểu cho NETWORK NODE
+##### A.2.2. Minimum config of NETWORK NODE
 - HDD: 20GB 
 - RAM: 2GB
-- CPU 01 (có lựa chọn chế độ ảo hóa)
-- NICs: 03. eth0 chế độ vmnet2. eth1 chế chộ bridge . eth2 chế độ vmnet3. Đặt IP động.
+- CPU 01 (Virtualization support)
+- NICs: 03. eth0-vmnet2. eth1-bridge . eth2-vmnet3. Dynamic IP.
 - Hostname: network
 
-Minh họa bằng hình:
+As showed as following figure:
 
 ![Alt text](http://i.imgur.com/AeXsglg.png)
 
-##### A.2.3. Cấu hình tối thiểu cho COMPUTE NODE (COMPUTE1)
+##### A.2.3. Minimum config of COMPUTE NODE (COMPUTE1)
 - HDD: 60GB
 - RAM: 3GB 
-- CPU 2x2 (Có lựa chọn ảo hóa)
-- NICs: 03. eth0 chế độ vmnet2. eth1 chế chộ bridge . eth2 chế độ vmnet3. Đặt IP động.
+- CPU 2x2 (Virtualization support)
+- NICs: 03. eth0-vmnet2. eth1-bridge . eth2-vmnet3. Dynamic IP.
 - Hostname: compute1 
 
-Minh họa bằng hình:
+As showed as following figure:
 
 ![Alt text](http://i.imgur.com/zuNIVIE.png)
 
 <a name="B"></a>
-### B. Các bước thực hiện chung
+### B. General execution steps
 
-#### B.1. Thao tác trên tất cả các máy chủ
-Truy cập bằng tài khoản root vào máy các máy chủ và tải các gói, script chuẩn bị cho quá trình cài đặt
+#### B.1. Manipulations on host machines.
+Access under the "root" user into host machines and install packages, preparation scripts for installing process.  
 ```sh
 apt-get update
 
@@ -97,26 +96,28 @@ cd juno-ubuntu14.04/
 
 chmod +x *.sh
 ```
-#### B.2. Sửa file khai báo các thông số trước khi thực thi shell
-Trước lúc chỉnh sửa, KHÔNG cần gán IP tĩnh cho các NICs trên từng máy chủ.
-Dùng vi để sửa file config.cfg nằm trong thư mục juno-ubuntu14.04 với các IP theo ý bạn hoặc giữ nguyên các IP và đảm bảo chúng chưa được gán cho máy nào trong mạng của bạn.
-File gốc như sau: (tốt nhất đặt giống file gốc)
+#### B.2. Modifying configurations before executing the shells.
+Before modifying, no need to assign static IP to NICs on each host machine.
+Modify the file config.cfg lying in the repo juno-ubuntu14.04 with your own IPs or remain IPs and ensure that they are not used by other machines
+in your network.
+
+Here is initial file :
 ....
-	# Khai bao IP cho CONTROLLER NODE
+	# IP assignment in CONTROLLER NODE
 	CON_MGNT_IP=10.10.10.71
 	CON_EXT_IP=192.168.1.71
 
-	# Khai bao IP cho NETWORK NODE
+	# IP assignment in NETWORK NODE
 	NET_MGNT_IP=10.10.10.72
 	NET_EXT_IP=192.168.1.72
 	NET_DATA_VM_IP=10.10.20.72
 
-	# Khai bao IP cho COMPUTE1 NODE
+	# IP assignment in COMPUTE1 NODE
 	COM1_MGNT_IP=10.10.10.73
 	COM1_EXT_IP=192.168.1.73
 	COM1_DATA_VM_IP=10.10.20.73
 
-	# Khai bao IP cho COMPUTE2 NODE
+	# IP assignment in COMPUTE2 NODE
 	COM2_MGNT_IP=10.10.10.74
 	COM2_EXT_IP=192.168.1.74
 	COM2_DATA_VM_IP=10.10.20.74
@@ -128,15 +129,15 @@ File gốc như sau: (tốt nhất đặt giống file gốc)
 	DEFAULT_PASS='Welcome123'
 .....
 
-Sau khi thay đổi xong chuyển qua thực thi các file dưới trên từng node
+Execution in each node
 
 <a name="C"></a>
-### C. Thực hiện trên CONTROLLER NODE
-#### C.1. Thực thi script thiết lập IP, hostname ...
+### C. Execution on the CONTROLLER NODE
+#### C.1. Scripts execution
 ```sh
 bash control-1.ipadd.sh
 ```	
-Sau khi thực hiện script trên, máy Controller sẽ khởi động lại và có thông số như sau:
+After executing scripts, the Controller will restart and has the following parameters:
 
 <table>
   <tr>
@@ -153,9 +154,9 @@ Sau khi thực hiện script trên, máy Controller sẽ khởi động lại v�
     <td>eth0</td>
     <td>10.10.10.71</td>
     <td>255.255.255.0</td>
-    <td>Để trống</td>
-    <td>Để trống</td>
-    <td>Chế độ VMNET2</td>
+    <td>    </td>
+    <td>    </td>
+    <td>VMNET2</td>
   </tr>
   <tr>
     <td>eth1</td>
@@ -163,48 +164,44 @@ Sau khi thực hiện script trên, máy Controller sẽ khởi động lại v�
     <td>255.255.255.0</td>
     <td>192.168.1.1</td>
     <td>8.8.8.8</td>
-    <td>Chế độ brige</td>
+    <td>brige</td>
   </tr>
 </table>
 
-#### C.2. Cài đặt các gói MYSQL, NTP cho Controller Node
-Đăng nhập vào Controller bằng địa chỉ <b>CON_EXT_IP</b> khai báo trong file <b><i>config.cfg</i></b> là 192.168.1.71 bằng tài khoản root.
-Sau đó di chuyển vào thư mục juno-ubuntu14.04 bằng lệnh cd và thực thi bằng lệnh bash
+#### C.2. MYSQL, NTP installations on the Controller Node
+Access to the controller node with the address of <b>CON_EXT_IP</b> declared in the file <b><i>config.cfg</i></b> 192.168.1.71 under the "root" user.
 ```sh
 cd juno-ubuntu14.04
 bash control-2.prepare.sh
 ```
     
-#### C.3. Tạo Database cho các thành phần 
-Thực thi shell dưới để tạo các database, user của database cho các thành phần
+#### C.3. Creating Database 
 ```sh
 bash control-3.create-db.sh
 ```	
-#### C.4 Cài đặt và cấu hình keystone
+#### C.4 Configuring and installing keystone
 ```sh
 bash control-4.keystone.sh
 ```
-#### C.5. Tạo user, role, tenant, phân quyền cho user và tạo các endpoint
-Shell dưới thực hiện việc tạo user, tenant và gán quyền cho các user. 
+#### C.5. Creating user, role, tenant, endpoint and  privilege for user
 <br>Tạo ra các endpoint cho các dịch vụ. Các biến trong shell được lấy từ file config.cfg
 
 ```sh
 bash control-5-creatusetenant.sh
 ```
-
-Thực thi file admin-openrc.sh để khai báo biến môi trường.
+Executing the openrc file
 
 ```sh
 source admin-openrc.sh
 ```
 
-Và kiểm tra lại dịch vụ keystone xem đã hoạt động tốt chưa bằng lệnh dưới.
+Checking again keystone service
 
 ```sh
 keystone user-list
 ```
 	
-Kết quả của lệnh keystone user-list như sau 
+Result of keystone user-list 
 
 ```sh
     +----------------------------------+---------+---------+-----------------------+
@@ -220,40 +217,37 @@ Kết quả của lệnh keystone user-list như sau
     +----------------------------------+---------+---------+-----------------------+
 ```
 
-Chuyển qua cài các dịch vụ tiếp theo
+Installation of other services
     
-#### C.6. Cài đặt thành phần GLANCE
-GLANCE dùng để cung cấp image template để khởi tạo máy ảo
+#### C.6. GLANCE installation
 
 ```sh
 bash control-6.glance.sh
 ```
 	
-- Shell thực hiện việc cài đặt GLANCE và tạo image với hệ điều hành Cirros (Bản Ubuntu thu gọn) dùng để kiểm tra GLANCE và tạo máy ảo sau này.
     
-#### C.7 Cài đặt NOVA
+#### C.7 NOVA installation
 ```sh
 bash control-7.nova.sh
 ```
 
-#### C.8 Cài đặt NEUTRON
+#### C.8 NEUTRON installation
 ```sh
 bash control-8.neutron.sh
 ```
 
-#### C.9 Cài đặt CINDER
+#### C.9 CINDER installation
 ```sh
 bash control-9.cinder.sh
 ```
 
-Tạm dừng việc cài đặt trên CONTROLLER NODE, sau khi cài xong NETWORK NODE và COMPUTE1 NODE sẽ quay lại để cài HORIZON và tạo các network, router.
 
 <a name="D"></a>
-### D. CÀI ĐẶT TRÊN NETWORK NODE
-- Cài đặt NEUTRON, ML2 và cấu hình GRE, sử dụng use case per-router per-tenant.
-- Lưu ý: Cần thực hiện bước tải script từ github về như hướng dẫn ở bước B.1 và B.2 (nếu có thay đổi IP)
+### D. Installation on the NETWORK NODE
+- Installing NEUTRON, ML2 and GRE config, using use case per-router per-tenant.
 
-Truy cập bằng tài khoản root vào máy các máy chủ và tải các gói, script chuẩn bị cho quá trình cài đặt
+Access to the NETWORK NODE under the "root" user 
+
 ```sh
 apt-get update
 
@@ -270,13 +264,13 @@ cd juno-ubuntu14.04/
 chmod +x *.sh
 ```
 
-#### D.1. Thiết lập IP, Hostname cho NETWORK NODE
-Script thực hiện việc cài đặt OpenvSwitch và khai báo br-int & br-ex cho OpenvSwitch
+#### D.1. Configuring IP, Hostname for NETWORK NODE
+Script for OpenvSwitch installtion and declaring  br-int & br-ex for OpenvSwitch
 
     bash net-ipadd.sh
 
-- NETWORK NODE sẽ khởi động lại, cần phải đăng nhập lại sau khi khởi động xong bằng tài khoản root.
-- Thông số về IP và hostname trên NETWORK NODE như sau:
+- NETWORK NODE will restart, access again under the "root" user.
+- IP và hostname parameters on the NETWORK NODE:
 
 <table>
   <tr>
@@ -293,9 +287,9 @@ Script thực hiện việc cài đặt OpenvSwitch và khai báo br-int & br-ex
     <td>eth0</td>
     <td>10.10.10.72</td>
     <td>255.255.255.0</td>
-    <td>Để trống</td>
-    <td>Để trống</td>
-    <td>Chế độ VMNET2</td>
+    <td>   </td>
+    <td>   </td>
+    <td>VMNET2</td>
   </tr>
   <tr>
     <td>br-ex</td>
@@ -303,21 +297,21 @@ Script thực hiện việc cài đặt OpenvSwitch và khai báo br-int & br-ex
     <td>255.255.255.0</td>
     <td>192.168.1.1</td>
     <td>8.8.8.8</td>
-    <td>Chế độ bridge</td>
+    <td>bridge</td>
   </tr>
   <tr>
     <td>eth2</td>
     <td>10.10.20.72</td>
     <td>255.255.255.0</td>
-    <td>Để trống</td>
-    <td>Để trống</td>
-    <td>Chế độ VMNET3</td>
+    <td>   </td>
+    <td>   </td>
+    <td>VMNET3</td>
   </tr>
 </table>
 
-Chú ý: Shell sẽ chuyển eth1 sang chế độ promisc và đặt IP cho br-ex được tạo ra sau khi cài OpenvSwitch
+Note: Shell will move eth1 to the promisc mode and assign IP for br-ex created after OpenvSwitch installation.
 
-#### D.2. Thực thi việc cài đặt NEUTRON và cấu hình
+#### D.2. NEUTRON installation and configuration
 - Dùng putty ssh vào NETWORK NODE bằng IP 192.168.1.172 với tài khoản root
 - Di chuyển vào thư mục juno-ubuntu14.04 và thực thi shell dưới
 ```sh
@@ -347,11 +341,11 @@ cd juno-ubuntu14.04/
 
 chmod +x *.sh
 ```
-#### E.1. Đặt hostname, IP và các gói bổ trợ
+#### E.1. Assigning hostname, IP and support packages
 
     bash com1-ipdd.sh
 
-Sau khi thực hiện xong shell trên các NICs của COMPUTE NODE sẽ như sau: (giống với khai báo trong file <b><i>config.cfg</i></b>)
+NICs of COMPUTE NODE will be following:
 
 <table>
   <tr>
@@ -368,9 +362,9 @@ Sau khi thực hiện xong shell trên các NICs của COMPUTE NODE sẽ như sa
     <td>eth0</td>
     <td>10.10.10.73</td>
     <td>255.255.255.0</td>
-    <td>Để trống</td>
-    <td>Để trống</td>
-    <td>Chế độ VMNET2</td>
+    <td>   </td>
+    <td>   </td>
+    <td>VMNET2</td>
   </tr>
   <tr>
     <td>br-ex</td>
@@ -384,34 +378,33 @@ Sau khi thực hiện xong shell trên các NICs của COMPUTE NODE sẽ như sa
     <td>eth2</td>
     <td>10.10.20.73</td>
     <td>255.255.255.0</td>
-    <td>Để trống</td>
-    <td>Để trống</td>
-    <td>Chế độ VMNET3</td>
+    <td>   </td>
+    <td>   </td>
+    <td>VMNET3</td>
   </tr>
 </table>
 
 
-COMPUTE node sẽ khởi động lại, cần phải đăng nhập bằng tải khoản root để thực hiện shell dưới
+COMPUTE node will restart, access again to execute the following scripts
     
-#### E.2. Cài đặt các gói của NOVA cho COMPUTE NODE
-Đăng nhập bằng tài khoản root và thực thi các lệnh dưới để tiến hành cài đặt nova
-
+#### E.2. Installing NOVA packages for COMPUTE NODE
+Access to the compute node
 ```sh
 cd juno-ubuntu14.04
 bash com1-prepare.sh
 ```
 
-Chọn YES ở màn hình trên trong quá trình cài đặt
+Choose "YES" 
 
 ![Alt text](http://i.imgur.com/jlRegTI.png)
 
-Kết thúc bước cài đặt trên COMPUTE NODE, chuyển về CONTROLLER NODE.
+End of COMPUTE NODE installing, move back to the CONTROLLER NODE.
 
 <a name="F"></a>
-### F. CÀI HORIZON, tạo các network trên CONTROLLER NODE
+### F. Installation on the CONTROLLER NODE
 
-#### F.1. Cài đặt Horizon
-Đăng nhập bằng tài khoản root và đứng tại thư mục /root/juno-ubuntu14.04
+#### F.1. Installing Horizon
+Access to the controller node
 
 ```sh
     cd /root/juno-ubuntu14.04
@@ -419,28 +412,26 @@ Kết thúc bước cài đặt trên COMPUTE NODE, chuyển về CONTROLLER NOD
     bash control-horizon.sh
 ```
 
-Sau khi thực hiện xong việc cài đặt HORIZON, màn hình sẽ trả về IP ADD, User và Password để đăng nhập vào horizon    
     
-#### F.2. Tạo PUBLIC NET, PRIVATE NET, ROUTER
-Tạo các policy để cho phép các máy ở ngoài có thể truy cập vào máy ảo (Instance) qua IP PUBLIC được floating.
-Thực hiện script dưới để tạo các loại network cho OpenStack
-Tạo router, gán subnet cho router, gán gateway cho router
-Khởi tạo một máy ảo với image là cirros để test
+#### F.2. Creating PUBLIC NET, PRIVATE NET, ROUTER
+Create policies to allow external machines to access to the instances via IP PUBLIC.
+Execute the following scripts to create networks for Openstack
+Create router, assign subnet to router, gateway to router
+Initiate a virtual machine with cirros image to test
 
 ```sh
     bash creat-network.sh
 ``` 
 
-#### Khởi động lại các node
-Khởi động lần lượt các node
+#### Restarting nodes
+Restart nodes in order:
 - CONTROLLER 
 - NETWORK NODE 
 - COMPUTE NODE 
-Và đăng nhập vào HORIZON ở bước F.1 và sử dụng OpenStack
 
-<a name="ketthuc"></a>
-### KÊT THÚC
- CHÚC VUI !
+<a name="end"></a>
+### The end
+ Have fun!
 
 
 
