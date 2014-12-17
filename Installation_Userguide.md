@@ -184,7 +184,8 @@ bash control-3.create-db.sh
 bash control-4.keystone.sh
 ```
 #### C.5. Creating user, role, tenant, endpoint and  privilege for user
-<br>Tạo ra các endpoint cho các dịch vụ. Các biến trong shell được lấy từ file config.cfg
+
+<br>Creates endpoints to the services. The parameters in shell are get from config.cfg
 
 ```sh
 bash control-5-creatusetenant.sh
@@ -312,19 +313,16 @@ Script for OpenvSwitch installtion and declaring  br-int & br-ex for OpenvSwitch
 Note: Shell will move eth1 to the promisc mode and assign IP for br-ex created after OpenvSwitch installation.
 
 #### D.2. NEUTRON installation and configuration
-- Dùng putty ssh vào NETWORK NODE bằng IP 192.168.1.172 với tài khoản root
-- Di chuyển vào thư mục juno-ubuntu14.04 và thực thi shell dưới
+- Using putty to ssh to the NETWORK NODE through IP 192.168.1.172 with "root" user
+
 ```sh
 cd juno-ubuntu14.04
 bash net-prepare.sh
 ```
-Kết thúc cài đặt trên NETWORK NODE và chuyển sang cài đặt COMPUTE NODE
+End of installing on the NETWORK NODE and move to COMPUTE NODE
 
 <a name="E"></a>
-### E. CÀI ĐẶT TRÊN COMPUTE NODE (COMPUTE1)
-- Lưu ý: Cần thực hiện bước tải script từ github về như hướng dẫn ở bước B.1 và B.2 (nếu có thay đổi IP)
-- Thực hiện các shell dưới để thiết lập hostname, gán ip và cài đặt các thành phần của nove trên máy COMPUTE NODE
-- Truy cập bằng tài khoản root vào máy các máy chủ và tải các gói, script chuẩn bị cho quá trình cài đặt
+### E. Installing on the COMPUTE NODE (COMPUTE1)
 
 ```sh
 apt-get update
@@ -372,7 +370,7 @@ NICs of COMPUTE NODE will be following:
     <td>255.255.255.0</td>
     <td>192.168.1.1</td>
     <td>8.8.8.8</td>
-    <td>Chế độ bridge</td>
+    <td>bridge</td>
   </tr>
   <tr>
     <td>eth2</td>
