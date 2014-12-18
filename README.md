@@ -1,8 +1,8 @@
 ### Openstack Juno installation guide on multinode
 
-#### [0.Openstack Juno installation guide on multinode](https://github.com/vietstacker/openstack-juno-multinode-U14.04-v1/blob/master/Installation_Userguide.md
+#### [0.Openstack Juno installation guide on multinode - ENGLISH Version](https://github.com/vietstacker/openstack-juno-multinode-U14.04-v1/blob/master/Installation_Userguide.md)
 
-#### [1. Link hướng dẫn cài đặt OpenStack Juno trên nhiều máy chủ](https://github.com/vietstacker/openstack-juno-multinode-U14.04-v1/blob/master/hd-caidat-openstack-multi-node-ubuntu14.04.md)
+#### [1. Link hướng dẫn cài đặt OpenStack Juno trên nhiều máy chủ - VIETNAMESE Version](https://github.com/vietstacker/openstack-juno-multinode-U14.04-v1/blob/master/hd-caidat-openstack-multi-node-ubuntu14.04.md)
 
 #### 2. Nhóm thực hiện:
 
