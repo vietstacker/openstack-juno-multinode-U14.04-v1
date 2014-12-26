@@ -86,6 +86,15 @@ security_group_api = neutron
 linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 
+# Cho phep thay doi kich thuoc may ao
+allow_resize_to_same_host=True
+scheduler_default_filters=AllHostsFilter
+
+# Cho phep chen password khi khoi tao
+libvirt_inject_password = True
+enable_instance_password = True
+libvirt_inject_key = true
+libvirt_inject_partition = -1
 
 [glance]
 host = $CON_MGNT_IP
