@@ -5,6 +5,7 @@ source config.cfg
 echo "########## Install NOVA in $CON_MGNT_IP ##########"
 sleep 5 
 apt-get -y install nova-api nova-cert nova-conductor nova-consoleauth nova-novncproxy nova-scheduler python-novaclient
+apt-get install libguestfs-tools -y
 
 ######## Backup configurations for NOVA ##########"
 sleep 7
