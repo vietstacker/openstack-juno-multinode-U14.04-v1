@@ -22,6 +22,7 @@ EOF
 apt-get -y update
 apt-get -y install nova-compute sysfsutils
 # apt-get -y install nova-compute-kvm python-guestfs 
+apt-get install libguestfs-tools -y
 
 echo "net.ipv4.conf.all.rp_filter=0" >> /etc/sysctl.conf
 echo "net.ipv4.conf.default.rp_filter=0" >> /etc/sysctl.conf
