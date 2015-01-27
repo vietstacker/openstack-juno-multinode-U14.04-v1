@@ -27,7 +27,7 @@ admin_token = $TOKEN_PASS
 [credential]
 
 [database]
-connection = mysql://keystone:$KEYSTONE_PASS@$CON_MGNT_IP/keystone
+connection = mysql://keystone:$KEYSTONE_DBPASS@$CON_MGNT_IP/keystone
 
 [ec2]
 [endpoint_filter]
