@@ -8,12 +8,12 @@ source config.cfg
 SERVICE_TENANT_ID=`keystone tenant-get service | awk '$2~/^id/{print $4}'`
 
 
-echo "########## Install NEUTRON in CONTROLLER or NETWORK node ################"
+echo "########## Install NEUTRON in $CON_MGNT_IP or NETWORK node ################"
 sleep 5
 apt-get -y install neutron-server neutron-plugin-ml2 python-neutronclient
 
-######## Backup configuration NEUTRON.CONF in CONTROLLER##################"
-echo "########## Config NEUTRON in CONTROLLER/NETWORK node ##########"
+######## Backup configuration NEUTRON.CONF in $CON_MGNT_IP##################"
+echo "########## Config NEUTRON in $CON_MGNT_IP/NETWORK node ##########"
 sleep 7
 
 #
@@ -69,8 +69,8 @@ service_provider=VPN:openswan:neutron.services.vpn.service_drivers.ipsec.IPsecVP
 EOF
 
 
-######## Backup configuration of ML2 in CONTROLLER##################"
-echo "########## Configuring ML2 in CONTROLLER/NETWORK node ##########"
+######## Backup configuration of ML2 in $CON_MGNT_IP##################"
+echo "########## Configuring ML2 in $CON_MGNT_IP/NETWORK node ##########"
 sleep 7
 
 controlML2=/etc/neutron/plugins/ml2/ml2_conf.ini

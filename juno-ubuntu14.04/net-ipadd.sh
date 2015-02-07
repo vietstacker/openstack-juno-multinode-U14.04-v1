@@ -10,7 +10,7 @@ echo "deb http://ubuntu-cloud.archive.canonical.com/ubuntu" \
 apt-get update -y && apt-get upgrade -y && apt-get dist-upgrade -y
 
 echo "########## Install and Config OpenvSwitch ##########"
-apt-get install -y openvswitch-controller openvswitch-switch openvswitch-datapath-dkms
+apt-get install -y openvswitch-$CON_MGNT_IP openvswitch-switch openvswitch-datapath-dkms
 
 echo "############ Install and Config NTP ############ "
 sleep 7 

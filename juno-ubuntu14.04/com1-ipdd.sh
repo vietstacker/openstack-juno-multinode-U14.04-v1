@@ -43,7 +43,7 @@ test -f $ifaces.orig || cp $ifaces $ifaces.orig
 rm $ifaces
 touch $ifaces
 cat << EOF >> $ifaces
-#Dat IP cho Controller node
+#Dat IP cho $CON_MGNT_IP node
 
 # LOOPBACK NET 
 auto lo
