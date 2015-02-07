@@ -13,7 +13,7 @@ test -f $ifaces.orig || cp $ifaces $ifaces.orig
 rm $ifaces
 touch $ifaces
 cat << EOF >> $ifaces
-#Setup IP for Controller node
+#Setup IP for $CON_MGNT_IP node
 
 # LOOPBACK NET 
 auto lo

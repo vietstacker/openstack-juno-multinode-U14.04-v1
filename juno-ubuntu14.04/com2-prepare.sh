@@ -1,18 +1,7 @@
 #!/bin/bash -ex
 #
-
 source config.cfg
 
-# Configuring for /etc/hosts
-# COM1_IP_MGNT=10.10.10.73
-# COM1_IP_DATA=10.10.20.73
-# COM2_IP_MGNT=10.10.10.74
-# COM2_IP_DATA=10.10.20.74
-# CON_IP_EX=192.168.1.71
-# CON_IP_MGNT=10.10.10.71
-# ADMIN_PASS=a
-# RABBIT_PASS=a
-#
 iphost=/etc/hosts
 test -f $iphost.orig || cp $iphost $iphost.orig
 rm $iphost
@@ -55,7 +44,7 @@ rm /etc/ntp.conf
 cat /etc/ntp.conf.bka | grep -v ^# | grep -v ^$ >> /etc/ntp.conf
 #
 sed -i 's/server/#server/' /etc/ntp.conf
-echo "server controller" >> /etc/ntp.conf
+echo "server $CON_MGNT_IP" >> /etc/ntp.conf
 
 echo "net.ipv4.conf.all.rp_filter=0" >> /etc/sysctl.conf
 echo "net.ipv4.conf.default.rp_filter=0" >> /etc/sysctl.conf
@@ -88,12 +77,12 @@ test -f $filenova.orig || cp $filenova $filenova.orig
 cat << EOF > $filenova
 [DEFAULT]
 network_api_class = nova.network.neutronv2.api.API
-neutron_url = http://controller:9696
+neutron_url = http://$CON_MGNT_IP:9696
 neutron_auth_strategy = keystone
 neutron_admin_tenant_name = service
 neutron_admin_username = neutron
 neutron_admin_password = $ADMIN_PASS
-neutron_admin_auth_url = http://controller:35357/v2.0
+neutron_admin_auth_url = http://$CON_MGNT_IP:35357/v2.0
 linuxnet_interface_driver = nova.network.linux_net.LinuxOVSInterfaceDriver
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 security_group_api = neutron
@@ -114,19 +103,19 @@ volumes_path=/var/lib/nova/volumes
 enabled_apis=ec2,osapi_compute,metadata
 auth_strategy = keystone
 rpc_backend = rabbit
-rabbit_host = controller
+rabbit_host = $CON_MGNT_IP
 rabbit_password = $RABBIT_PASS
 my_ip = $COM2_MGNT_IP
 vnc_enabled = True
 vncserver_listen = 0.0.0.0
 vncserver_proxyclient_address = $COM2_MGNT_IP
 novncproxy_base_url = http://$CON_EXT_IP:6080/vnc_auto.html
-glance_host = controller
+glance_host = $CON_MGNT_IP
 [database]
-connection = mysql://nova:$ADMIN_PASS@controller/nova
+connection = mysql://nova:$ADMIN_PASS@$CON_MGNT_IP/nova
 [keystone_authtoken]
-auth_uri = http://controller:5000
-auth_host = controller
+auth_uri = http://$CON_MGNT_IP:5000
+auth_host = $CON_MGNT_IP
 auth_port = 35357
 auth_protocol = http
 admin_tenant_name = service
@@ -165,7 +154,7 @@ cat << EOF > $comfileneutron
 [DEFAULT]
 auth_strategy = keystone
 rpc_backend = neutron.openstack.common.rpc.impl_kombu
-rabbit_host = controller
+rabbit_host = $CON_MGNT_IP
 rabbit_password = $RABBIT_PASS
 core_plugin = ml2
 service_plugins = router
@@ -181,8 +170,8 @@ notification_driver = neutron.openstack.common.notifier.rpc_notifier
 root_helper = sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf
 
 [keystone_authtoken]
-auth_uri = http://controller:5000
-auth_host = controller
+auth_uri = http://$CON_MGNT_IP:5000
+auth_host = $CON_MGNT_IP
 auth_protocol = http
 auth_port = 35357
 admin_tenant_name = service
@@ -273,7 +262,7 @@ sleep 5
 echo "export OS_USERNAME=admin" > admin-openrc.sh
 echo "export OS_PASSWORD=$ADMIN_PASS" >> admin-openrc.sh
 echo "export OS_TENANT_NAME=admin" >> admin-openrc.sh
-echo "export OS_AUTH_URL=http://controller:35357/v2.0" >> admin-openrc.sh
+echo "export OS_AUTH_URL=http://$CON_MGNT_IP:35357/v2.0" >> admin-openrc.sh
 
 ########
 echo "############ Testing NOVA and NEUTRON service ############"
