@@ -26,6 +26,5 @@
 - Triển khai trên Ubuntu 14.04
 - Các project triển khai: KEYSTONE, NOVA, NEUTRON, GLANCE, CINDER, HORIZON
 
-#### [5. Đang quay video hướng dẫn thực thi script & hướng dẫn sử dụng dashborad]
-
-<!--- [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/6lJwvGY1WLk/0.jpg)](http://www.youtube.com/watch?v=6lJwvGY1WLk) -->
+#### [5. Video hướng dẫn thực thi script & hướng dẫn sử dụng dashborad]
+https://www.youtube.com/watch?v=IaZtWQmDjks
