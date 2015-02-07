@@ -258,9 +258,9 @@ echo "export OS_TENANT_NAME=admin" >> admin-openrc.sh
 echo "export OS_AUTH_URL=http://$CON_MGNT_IP:35357/v2.0" >> admin-openrc.sh
 
 ########
-echo "############ Testing nova and neutron ############"
-sleep 5
+# echo "############ Testing nova and neutron ############"
+# sleep 5
 ########
-source admin-openrc.sh
-nova-manage service list
-neutron agent-list
+# source admin-openrc.sh
+# nova-manage service list
+# neutron agent-list
