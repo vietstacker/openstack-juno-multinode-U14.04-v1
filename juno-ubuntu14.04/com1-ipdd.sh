@@ -11,7 +11,7 @@ apt-get update -y && apt-get upgrade -y && apt-get dist-upgrade -y
 
 echo "##### Configuring hostname for COMPUTE1 node... #####"
 sleep 3
-echo "congjuno-com1" > /etc/hostname
+echo "compute1" > /etc/hostname
 hostname -F /etc/hostname
 
 apt-get install ntp -y
