@@ -67,7 +67,7 @@ verbose=True
 ec2_private_dns_show_ip=True
 api_paste_config=/etc/nova/api-paste.ini
 enabled_apis=ec2,osapi_compute,metadata
-F
+
 rpc_backend = rabbit
 rabbit_host = $CON_MGNT_IP
 rabbit_password = $RABBIT_PASS
